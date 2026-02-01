@@ -1,0 +1,103 @@
+<% content_for(:title) { "チーム管理 - #{@site.name}" } %>
+
+<div class="mb-6">
+  <%= link_to "← #{@site.name}に戻る", site_path(@site), class: "text-teal-600 hover:text-teal-800" %>
+</div>
+
+<div class="flex justify-between items-center mb-6">
+  <h1 class="text-2xl font-bold text-gray-900">チーム管理</h1>
+  <%= link_to "メンバーを招待", new_site_team_membership_path(@site), class: "bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-md text-sm font-medium" %>
+</div>
+
+<div class="bg-white shadow rounded-lg overflow-hidden">
+  <table class="min-w-full divide-y divide-gray-200">
+    <thead class="bg-gray-50">
+      <tr>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">メンバー</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">権限</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">招待者</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">参加日</th>
+        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+      </tr>
+    </thead>
+    <tbody class="bg-white divide-y divide-gray-200">
+      <% if @site.user == current_user %>
+        <tr class="bg-gray-50">
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 h-10 w-10 rounded-full bg-teal-100 flex items-center justify-center">
+                <span class="text-teal-600 font-medium"><%= @site.user.name.first.upcase %></span>
+              </div>
+              <div class="ml-4">
+                <div class="text-sm font-medium text-gray-900"><%= @site.user.name %></div>
+                <div class="text-sm text-gray-500"><%= @site.user.email %></div>
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+              サイトオーナー
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= @site.created_at.strftime("%Y/%m/%d") %></td>
+          <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">-</td>
+        </tr>
+      <% end %>
+
+      <% @team_memberships.each do |membership| %>
+        <tr>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center">
+                <span class="text-gray-600 font-medium"><%= membership.user.name.first.upcase %></span>
+              </div>
+              <div class="ml-4">
+                <div class="text-sm font-medium text-gray-900"><%= membership.user.name %></div>
+                <div class="text-sm text-gray-500"><%= membership.user.email %></div>
+              </div>
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <%= form_with model: [@site, membership], class: "inline-block" do |f| %>
+              <%= f.select :role,
+                  TeamMembership::ROLES.map { |r| [TeamMembership.new(role: r).role_label, r] },
+                  {},
+                  class: "text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500",
+                  onchange: "this.form.submit()" %>
+            <% end %>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <%= membership.invited_by&.name || "-" %>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <%= membership.created_at.strftime("%Y/%m/%d") %>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+            <%= button_to "削除", site_team_membership_path(@site, membership),
+                method: :delete,
+                class: "text-red-600 hover:text-red-900",
+                data: { turbo_confirm: "#{membership.user.name}さんをチームから削除しますか？" } %>
+          </td>
+        </tr>
+      <% end %>
+
+      <% if @team_memberships.empty? && @site.user != current_user %>
+        <tr>
+          <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+            チームメンバーはまだいません
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
+  <h3 class="text-sm font-medium text-blue-800 mb-2">権限について</h3>
+  <ul class="text-sm text-blue-700 space-y-1">
+    <li><strong>オーナー:</strong> すべての機能にアクセス可能。チームメンバーの追加・削除ができます。</li>
+    <li><strong>編集者:</strong> キーワードや記事の追加・編集が可能。チーム管理はできません。</li>
+    <li><strong>閲覧者:</strong> データの閲覧のみ可能。編集はできません。</li>
+  </ul>
+</div>

@@ -1,0 +1,174 @@
+<div class="space-y-6">
+  <div class="flex justify-between items-center">
+    <div>
+      <div class="flex items-center">
+        <%= link_to site_path(@site), class: "text-gray-400 hover:text-gray-600 mr-2" do %>
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        <% end %>
+        <h1 class="text-2xl font-bold text-gray-900"><%= @keyword.word %></h1>
+      </div>
+      <% if @keyword.target_url.present? %>
+        <p class="mt-1 text-sm text-gray-500"><%= @keyword.target_url %></p>
+      <% end %>
+    </div>
+    <div class="flex space-x-3">
+      <%= link_to "Edit", edit_site_keyword_path(@site, @keyword), class: "inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+    </div>
+  </div>
+
+  <!-- Current Rank Card -->
+  <div class="grid grid-cols-1 gap-5 sm:grid-cols-3">
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">Current Rank</dt>
+              <dd>
+                <% rank = @keyword.current_rank %>
+                <% if rank && rank <= 100 %>
+                  <span class="text-2xl font-semibold text-gray-900"><%= rank %></span>
+                <% elsif rank == 101 %>
+                  <span class="text-lg text-gray-500">100+</span>
+                <% else %>
+                  <span class="text-lg text-gray-400">-</span>
+                <% end %>
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <% change = @keyword.rank_change %>
+            <% if change.nil? || change == 0 %>
+              <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14" />
+              </svg>
+            <% elsif change > 0 %>
+              <svg class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+              </svg>
+            <% else %>
+              <svg class="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </svg>
+            <% end %>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">Change (vs yesterday)</dt>
+              <dd>
+                <% if change.nil? %>
+                  <span class="text-lg text-gray-400">-</span>
+                <% elsif change > 0 %>
+                  <span class="text-2xl font-semibold text-green-600">+<%= change %></span>
+                <% elsif change < 0 %>
+                  <span class="text-2xl font-semibold text-red-600"><%= change %></span>
+                <% else %>
+                  <span class="text-lg text-gray-500">No change</span>
+                <% end %>
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+      <div class="p-5">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">Data Points</dt>
+              <dd class="text-2xl font-semibold text-gray-900"><%= @rank_history.count %></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rank History Chart -->
+  <div class="bg-white shadow rounded-lg p-6">
+    <h3 class="text-lg font-medium text-gray-900 mb-4">30-Day Rank History</h3>
+    <% if @rank_history.any? %>
+      <div class="h-64">
+        <%= line_chart @rank_history.map { |h| [h.checked_at, h.rank] },
+            height: "100%",
+            colors: ["#0d9488"],
+            library: {
+              scales: {
+                y: {
+                  reverse: true,
+                  min: 1,
+                  title: { display: true, text: 'Rank' }
+                }
+              }
+            } %>
+      </div>
+    <% else %>
+      <div class="h-64 flex items-center justify-center">
+        <p class="text-gray-500">No rank data yet. Data will appear after the first check.</p>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Rank History Table -->
+  <div class="bg-white shadow rounded-lg">
+    <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+      <h3 class="text-lg leading-6 font-medium text-gray-900">Rank History</h3>
+    </div>
+    <% if @rank_history.any? %>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rank</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% @rank_history.reverse.first(30).each do |history| %>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <%= history.checked_at.strftime("%Y-%m-%d") %>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <% if history.rank <= 100 %>
+                    <span class="text-sm font-medium text-gray-900"><%= history.rank %></span>
+                  <% else %>
+                    <span class="text-sm text-gray-500">100+</span>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div class="p-8 text-center">
+        <p class="text-sm text-gray-500">No rank history yet.</p>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Comments Section -->
+  <%= render "comments/comments", commentable: @keyword %>
+</div>

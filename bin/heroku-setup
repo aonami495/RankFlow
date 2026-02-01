@@ -1,0 +1,46 @@
+#!/bin/bash
+# Heroku Setup Script for RankFlow
+
+echo "=== RankFlow Heroku Setup ==="
+
+# Check if Heroku CLI is installed
+if ! command -v heroku &> /dev/null; then
+    echo "Error: Heroku CLI is not installed."
+    echo "Install it from: https://devcenter.heroku.com/articles/heroku-cli"
+    exit 1
+fi
+
+# Create Heroku app if not exists
+if [ -z "$1" ]; then
+    echo "Usage: bin/heroku-setup <app-name>"
+    exit 1
+fi
+
+APP_NAME=$1
+
+echo "Creating Heroku app: $APP_NAME"
+heroku create $APP_NAME
+
+echo "Adding PostgreSQL addon..."
+heroku addons:create heroku-postgresql:mini -a $APP_NAME
+
+echo "Adding Redis addon..."
+heroku addons:create heroku-redis:mini -a $APP_NAME
+
+echo "Setting config vars..."
+heroku config:set RAILS_MASTER_KEY=$(cat config/master.key) -a $APP_NAME
+heroku config:set RAILS_SERVE_STATIC_FILES=true -a $APP_NAME
+
+echo ""
+echo "=== Setup Complete ==="
+echo ""
+echo "Next steps:"
+echo "1. Set your Google API credentials:"
+echo "   heroku config:set GOOGLE_API_KEY=your_key -a $APP_NAME"
+echo "   heroku config:set GOOGLE_SEARCH_ENGINE_ID=your_id -a $APP_NAME"
+echo ""
+echo "2. Deploy the app:"
+echo "   git push heroku main"
+echo ""
+echo "3. Scale the worker dyno:"
+echo "   heroku ps:scale worker=1 -a $APP_NAME"

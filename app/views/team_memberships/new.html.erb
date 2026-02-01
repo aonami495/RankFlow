@@ -1,0 +1,53 @@
+<% content_for(:title) { "メンバー招待 - #{@site.name}" } %>
+
+<div class="mb-6">
+  <%= link_to "← チーム管理に戻る", site_team_memberships_path(@site), class: "text-teal-600 hover:text-teal-800" %>
+</div>
+
+<div class="max-w-lg">
+  <h1 class="text-2xl font-bold text-gray-900 mb-6">メンバーを招待</h1>
+
+  <div class="bg-white shadow rounded-lg p-6">
+    <%= form_with url: site_team_memberships_path(@site), method: :post, class: "space-y-6" do |f| %>
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700">メールアドレス</label>
+        <p class="text-xs text-gray-500 mt-1 mb-2">招待するユーザーのメールアドレスを入力してください（登録済みユーザーのみ）</p>
+        <input type="email" name="email" id="email" required
+               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
+               placeholder="user@example.com">
+      </div>
+
+      <div>
+        <label for="team_membership_role" class="block text-sm font-medium text-gray-700">権限</label>
+        <select name="team_membership[role]" id="team_membership_role"
+                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500">
+          <option value="viewer">閲覧者 - データの閲覧のみ</option>
+          <option value="editor">編集者 - キーワードや記事の編集が可能</option>
+          <option value="owner">オーナー - チーム管理を含む全権限</option>
+        </select>
+      </div>
+
+      <div class="flex justify-end space-x-3">
+        <%= link_to "キャンセル", site_team_memberships_path(@site), class: "px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50" %>
+        <button type="submit" class="px-4 py-2 bg-teal-600 text-white rounded-md text-sm font-medium hover:bg-teal-700">
+          招待する
+        </button>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+    <div class="flex">
+      <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+      </svg>
+      <div class="ml-3">
+        <h3 class="text-sm font-medium text-yellow-800">注意</h3>
+        <p class="mt-1 text-sm text-yellow-700">
+          招待できるのは、RankFlowに登録済みのユーザーのみです。<br>
+          まだ登録していないユーザーには、先にアカウントを作成してもらってください。
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

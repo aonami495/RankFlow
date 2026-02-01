@@ -1,0 +1,120 @@
+<div class="space-y-6">
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <h1 class="text-2xl font-bold text-gray-900">Revenue Management</h1>
+    <%= link_to new_revenue_path, class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700" do %>
+      <svg class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+      </svg>
+      Add Revenue
+    <% end %>
+  </div>
+
+  <% if @sites.empty? %>
+    <div class="bg-white rounded-lg shadow p-8 text-center">
+      <p class="text-gray-500">You need to add a site first to track revenue.</p>
+      <div class="mt-4">
+        <%= link_to "Add Site", new_site_path, class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700" %>
+      </div>
+    </div>
+  <% else %>
+    <!-- Filters -->
+    <div class="bg-white shadow rounded-lg p-4">
+      <%= form_with url: revenues_path, method: :get, data: { turbo_frame: "_top" }, class: "flex flex-wrap gap-4" do %>
+        <div>
+          <label for="site_id" class="block text-sm font-medium text-gray-700">Site</label>
+          <%= select_tag :site_id, options_from_collection_for_select(@sites, :id, :name, @current_site&.id),
+              class: "mt-1 block w-48 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm",
+              onchange: "this.form.submit()" %>
+        </div>
+        <div>
+          <label for="month" class="block text-sm font-medium text-gray-700">Month</label>
+          <%= month_field_tag :month, @current_month.strftime("%Y-%m"),
+              class: "mt-1 block w-40 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm",
+              onchange: "this.form.submit()" %>
+        </div>
+      <% end %>
+    </div>
+
+    <% if @current_site %>
+      <!-- Monthly Revenue Chart -->
+      <div class="bg-white shadow rounded-lg p-6">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Monthly Revenue Trend</h3>
+        <% if @monthly_totals.any? %>
+          <div class="h-64">
+            <%= column_chart @monthly_totals.transform_keys { |k| k.strftime("%Y/%m") },
+                height: "100%",
+                colors: ["#0d9488"],
+                prefix: "\u00a5",
+                thousands: "," %>
+          </div>
+        <% else %>
+          <div class="h-64 flex items-center justify-center">
+            <p class="text-gray-500">No revenue data yet.</p>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Revenue Table -->
+      <div class="bg-white shadow rounded-lg">
+        <div class="px-4 py-5 border-b border-gray-200 sm:px-6 flex justify-between items-center">
+          <h3 class="text-lg leading-6 font-medium text-gray-900">
+            <%= @current_month.strftime("%B %Y") %> Revenue
+          </h3>
+          <div class="text-lg font-semibold text-gray-900">
+            Total: <%= number_to_currency(@total_revenue, unit: "\u00a5", precision: 0) %>
+          </div>
+        </div>
+
+        <% if @revenues.any? %>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ASP</th>
+                  <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                  <th scope="col" class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <% @revenues.each do |revenue| %>
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm font-medium text-gray-900"><%= revenue.asp_name %></div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right">
+                      <span class="text-lg font-semibold text-gray-900">
+                        <%= number_to_currency(revenue.amount, unit: "\u00a5", precision: 0) %>
+                      </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                      <%= link_to "Edit", edit_revenue_path(revenue), class: "text-teal-600 hover:text-teal-900" %>
+                      <%= button_to "Delete", revenue_path(revenue), method: :delete, data: { turbo_confirm: "Delete this revenue entry?" }, class: "text-red-600 hover:text-red-900" %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+              <tfoot class="bg-gray-50">
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Total</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right">
+                    <span class="text-lg font-bold text-gray-900">
+                      <%= number_to_currency(@total_revenue, unit: "\u00a5", precision: 0) %>
+                    </span>
+                  </td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        <% else %>
+          <div class="p-8 text-center">
+            <p class="text-sm text-gray-500">No revenue recorded for this month.</p>
+            <div class="mt-4">
+              <%= link_to "Add Revenue", new_revenue_path, class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

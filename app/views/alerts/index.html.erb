@@ -1,0 +1,97 @@
+<div class="space-y-6">
+  <div class="flex justify-between items-center">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Alerts</h1>
+      <p class="mt-1 text-sm text-gray-500"><%= @unread_count %> unread alerts</p>
+    </div>
+    <% if @alerts.unread.any? %>
+      <%= button_to "Mark All as Read", mark_all_as_read_alerts_path, method: :post, class: "inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+    <% end %>
+  </div>
+
+  <% if @alerts.any? %>
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+      <ul class="divide-y divide-gray-200">
+        <% @alerts.each do |alert| %>
+          <li class="<%= alert.read? ? 'bg-white' : 'bg-teal-50' %>">
+            <div class="px-4 py-4 flex items-center sm:px-6">
+              <div class="min-w-0 flex-1 flex items-center">
+                <div class="flex-shrink-0">
+                  <% case alert.alert_color
+                     when 'red' %>
+                    <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-red-100">
+                      <svg class="h-5 w-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 012 0v7.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                      </svg>
+                    </span>
+                  <% when 'green' %>
+                    <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-green-100">
+                      <svg class="h-5 w-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                      </svg>
+                    </span>
+                  <% when 'teal' %>
+                    <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-teal-100">
+                      <svg class="h-5 w-5 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                      </svg>
+                    </span>
+                  <% when 'yellow' %>
+                    <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-yellow-100">
+                      <svg class="h-5 w-5 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                      </svg>
+                    </span>
+                  <% else %>
+                    <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-gray-100">
+                      <svg class="h-5 w-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
+                      </svg>
+                    </span>
+                  <% end %>
+                </div>
+                <div class="min-w-0 flex-1 px-4">
+                  <div>
+                    <p class="text-sm font-medium text-gray-900 truncate">
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                        <%= case alert.alert_color
+                            when 'red' then 'bg-red-100 text-red-800'
+                            when 'green' then 'bg-green-100 text-green-800'
+                            when 'teal' then 'bg-teal-100 text-teal-800'
+                            when 'yellow' then 'bg-yellow-100 text-yellow-800'
+                            else 'bg-gray-100 text-gray-800'
+                            end %>">
+                        <%= alert.alert_label %>
+                      </span>
+                    </p>
+                    <p class="mt-1 text-sm text-gray-600"><%= alert.message %></p>
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center space-x-4">
+                <p class="text-sm text-gray-500"><%= time_ago_in_words(alert.triggered_at) %> ago</p>
+                <% unless alert.read? %>
+                  <%= button_to mark_as_read_alert_path(alert), method: :patch, class: "text-sm text-teal-600 hover:text-teal-900" do %>
+                    Mark as read
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+
+    <div class="mt-4">
+      <%= paginate @alerts if @alerts.respond_to?(:total_pages) %>
+    </div>
+  <% else %>
+    <div class="bg-white rounded-lg shadow p-8 text-center">
+      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+      </svg>
+      <h3 class="mt-2 text-sm font-medium text-gray-900">No alerts</h3>
+      <p class="mt-1 text-sm text-gray-500">You're all caught up! No alerts at this time.</p>
+    </div>
+  <% end %>
+</div>

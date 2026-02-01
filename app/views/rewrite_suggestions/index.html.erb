@@ -1,0 +1,124 @@
+<div class="space-y-6">
+  <div>
+    <h1 class="text-2xl font-bold text-gray-900">Rewrite Suggestions</h1>
+    <p class="mt-1 text-sm text-gray-500">Articles prioritized by potential improvement impact</p>
+  </div>
+
+  <div class="bg-white rounded-lg shadow p-6">
+    <h3 class="text-lg font-medium text-gray-900 mb-4">How Priority Score is Calculated</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <h4 class="font-medium text-gray-700">Rank Position</h4>
+        <ul class="mt-2 text-gray-600 space-y-1">
+          <li>Top 10: +30 points</li>
+          <li>11-20: +20 points</li>
+          <li>21-50: +10 points</li>
+        </ul>
+      </div>
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <h4 class="font-medium text-gray-700">Rank Decline</h4>
+        <ul class="mt-2 text-gray-600 space-y-1">
+          <li>+2 points per position dropped</li>
+          <li>Recent declines weighted more</li>
+        </ul>
+      </div>
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <h4 class="font-medium text-gray-700">Revenue Impact</h4>
+        <ul class="mt-2 text-gray-600 space-y-1">
+          <li>+1 point per 1,000 yen revenue</li>
+          <li>Higher revenue = higher priority</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <% if @articles.any? %>
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Article</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keywords</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Avg Rank</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Revenue</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Score</th>
+            <th scope="col" class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @articles.each_with_index do |article, index| %>
+            <tr class="<%= article.needs_rewrite? ? 'bg-yellow-50' : '' %>">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="inline-flex items-center justify-center h-8 w-8 rounded-full
+                  <%= case index
+                      when 0 then 'bg-yellow-400 text-yellow-900'
+                      when 1 then 'bg-gray-300 text-gray-700'
+                      when 2 then 'bg-amber-600 text-white'
+                      else 'bg-gray-100 text-gray-600'
+                      end %>
+                  font-bold text-sm">
+                  <%= index + 1 %>
+                </span>
+              </td>
+              <td class="px-6 py-4">
+                <div class="text-sm font-medium text-gray-900 max-w-xs truncate">
+                  <%= link_to article.title, site_article_path(article.site, article), class: "hover:text-teal-600" %>
+                </div>
+                <div class="text-sm text-gray-500"><%= article.site.name %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                  <%= case article.status_color
+                      when 'green' then 'bg-green-100 text-green-800'
+                      when 'yellow' then 'bg-yellow-100 text-yellow-800'
+                      when 'red' then 'bg-red-100 text-red-800'
+                      else 'bg-gray-100 text-gray-800'
+                      end %>">
+                  <%= article.status_label %>
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <%= article.keywords.count %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <% avg_rank = article.average_rank %>
+                <% if avg_rank %>
+                  <span class="text-sm font-semibold text-gray-900"><%= avg_rank %></span>
+                <% else %>
+                  <span class="text-sm text-gray-400">-</span>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <%= number_to_currency(article.monthly_revenue, unit: "\u00a5", precision: 0) %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <% score = article.rewrite_priority_score %>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                  <%= case score
+                      when 100.. then 'bg-red-100 text-red-800'
+                      when 50..99 then 'bg-yellow-100 text-yellow-800'
+                      else 'bg-gray-100 text-gray-800'
+                      end %>">
+                  <%= score %> pts
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <%= link_to "View", site_article_path(article.site, article), class: "text-teal-600 hover:text-teal-900" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="bg-white rounded-lg shadow p-8 text-center">
+      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+      <h3 class="mt-2 text-sm font-medium text-gray-900">No articles with keywords</h3>
+      <p class="mt-1 text-sm text-gray-500">Add articles and associate keywords to see rewrite suggestions.</p>
+    </div>
+  <% end %>
+</div>

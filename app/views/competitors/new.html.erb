@@ -1,0 +1,17 @@
+<div class="max-w-2xl mx-auto">
+  <div class="mb-6">
+    <div class="flex items-center">
+      <%= link_to site_competitors_path(@site), class: "text-gray-400 hover:text-gray-600 mr-2" do %>
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      <% end %>
+      <h1 class="text-2xl font-bold text-gray-900">Add Competitor</h1>
+    </div>
+    <p class="mt-1 text-sm text-gray-500">Track a competitor's rankings for your keywords</p>
+  </div>
+
+  <div class="bg-white shadow rounded-lg p-6">
+    <%= render "form", competitor: @competitor %>
+  </div>
+</div>

@@ -1,0 +1,62 @@
+<div class="space-y-6">
+  <div class="flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-gray-900">Your Sites</h1>
+    <% if current_user.can_add_site? %>
+      <%= link_to new_site_path, class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500" do %>
+        <svg class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+        Add Site
+      <% end %>
+    <% else %>
+      <span class="text-sm text-gray-500">
+        <%= current_user.sites.count %>/<%= current_user.max_sites %> sites (Upgrade to add more)
+      </span>
+    <% end %>
+  </div>
+
+  <% if @sites.empty? %>
+    <div class="bg-white rounded-lg shadow p-8 text-center">
+      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+      </svg>
+      <h3 class="mt-2 text-sm font-medium text-gray-900">No sites</h3>
+      <p class="mt-1 text-sm text-gray-500">Get started by adding your first site to track.</p>
+      <div class="mt-6">
+        <%= link_to "Add Site", new_site_path, class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500" %>
+      </div>
+    </div>
+  <% else %>
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <% @sites.each do |site| %>
+        <div class="bg-white overflow-hidden shadow rounded-lg hover:shadow-md transition-shadow">
+          <%= link_to site, class: "block p-5" do %>
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <div class="h-10 w-10 rounded-full bg-teal-100 flex items-center justify-center">
+                  <svg class="h-6 w-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-4 flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-900 truncate"><%= site.name %></p>
+                <p class="text-sm text-gray-500 truncate"><%= site.url %></p>
+              </div>
+            </div>
+            <div class="mt-4 grid grid-cols-2 gap-4">
+              <div>
+                <p class="text-xs text-gray-500">Keywords</p>
+                <p class="text-lg font-semibold text-gray-900"><%= site.keywords.count %></p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500">Avg Rank</p>
+                <p class="text-lg font-semibold text-gray-900"><%= site.average_rank || "-" %></p>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

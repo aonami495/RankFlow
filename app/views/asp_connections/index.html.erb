@@ -1,0 +1,128 @@
+<div class="space-y-6">
+  <div class="flex justify-between items-center">
+    <div>
+      <div class="flex items-center">
+        <%= link_to site_path(@site), class: "text-gray-400 hover:text-gray-600 mr-2" do %>
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        <% end %>
+        <h1 class="text-2xl font-bold text-gray-900">ASP Connections - <%= @site.name %></h1>
+      </div>
+      <p class="mt-1 text-sm text-gray-500">Connect your affiliate networks to automatically sync revenue data</p>
+    </div>
+  </div>
+
+  <!-- Connected ASPs -->
+  <% if @asp_connections.any? %>
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+      <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Connected ASPs</h3>
+      </div>
+      <ul class="divide-y divide-gray-200">
+        <% @asp_connections.each do |connection| %>
+          <li class="px-6 py-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <span class="inline-flex items-center justify-center h-10 w-10 rounded-full
+                    <%= case connection.status_color
+                        when 'green' then 'bg-green-100'
+                        when 'yellow' then 'bg-yellow-100'
+                        when 'red' then 'bg-red-100'
+                        else 'bg-gray-100'
+                        end %>">
+                    <svg class="h-5 w-5
+                      <%= case connection.status_color
+                          when 'green' then 'text-green-600'
+                          when 'yellow' then 'text-yellow-600'
+                          when 'red' then 'text-red-600'
+                          else 'text-gray-600'
+                          end %>" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                  </span>
+                </div>
+                <div class="ml-4">
+                  <p class="text-sm font-medium text-gray-900"><%= connection.display_name %></p>
+                  <p class="text-sm text-gray-500">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium
+                      <%= case connection.status_color
+                          when 'green' then 'bg-green-100 text-green-800'
+                          when 'yellow' then 'bg-yellow-100 text-yellow-800'
+                          when 'red' then 'bg-red-100 text-red-800'
+                          else 'bg-gray-100 text-gray-800'
+                          end %>">
+                      <%= connection.status_label %>
+                    </span>
+                    <% if connection.last_synced_at %>
+                      <span class="ml-2">Last synced: <%= time_ago_in_words(connection.last_synced_at) %> ago</span>
+                    <% end %>
+                  </p>
+                  <% if connection.sync_error.present? %>
+                    <p class="text-sm text-red-600 mt-1"><%= connection.sync_error %></p>
+                  <% end %>
+                </div>
+              </div>
+              <div class="flex items-center space-x-2">
+                <% if connection.supports_auto_sync? %>
+                  <%= button_to "Sync Now", sync_site_asp_connection_path(@site, connection), method: :post,
+                      class: "inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+                <% end %>
+                <%= link_to "Edit", edit_site_asp_connection_path(@site, connection),
+                    class: "inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+                <%= button_to "Remove", site_asp_connection_path(@site, connection), method: :delete,
+                    data: { turbo_confirm: "Remove this connection?" },
+                    class: "inline-flex items-center px-3 py-1.5 border border-red-300 shadow-sm text-sm font-medium rounded-md text-red-700 bg-white hover:bg-red-50" %>
+              </div>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- Available ASPs -->
+  <% if @available_asps.any? %>
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+      <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Available ASPs</h3>
+        <p class="mt-1 text-sm text-gray-500">Connect additional affiliate networks</p>
+      </div>
+      <ul class="divide-y divide-gray-200">
+        <% @available_asps.each do |asp_name, config| %>
+          <li class="px-6 py-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-gray-100">
+                    <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                  </span>
+                </div>
+                <div class="ml-4">
+                  <p class="text-sm font-medium text-gray-900"><%= config[:name] %></p>
+                  <p class="text-sm text-gray-500">
+                    <% if config[:supports_auto_sync] %>
+                      <span class="inline-flex items-center text-green-600">
+                        <svg class="mr-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                        Auto-sync supported
+                      </span>
+                    <% else %>
+                      <span class="text-gray-500">Manual entry only</span>
+                    <% end %>
+                  </p>
+                </div>
+              </div>
+              <%= link_to "Connect", new_site_asp_connection_path(@site, asp_name: asp_name),
+                  class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700" %>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+</div>

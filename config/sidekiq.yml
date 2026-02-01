@@ -1,0 +1,12 @@
+:concurrency: 5
+:max_retries: 3
+
+:queues:
+  - default
+  - mailers
+
+:schedule:
+  daily_rank_check:
+    cron: '0 17 * * *'  # UTC 17:00 = JST 02:00
+    class: DailyRankCheckJob
+    queue: default

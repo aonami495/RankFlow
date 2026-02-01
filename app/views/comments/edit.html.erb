@@ -1,0 +1,26 @@
+<% content_for(:title) { "コメント編集" } %>
+
+<div class="mb-6">
+  <%= link_to "← 戻る", commentable_path, class: "text-teal-600 hover:text-teal-800" %>
+</div>
+
+<div class="max-w-lg">
+  <h1 class="text-2xl font-bold text-gray-900 mb-6">コメント編集</h1>
+
+  <div class="bg-white shadow rounded-lg p-6">
+    <%= form_with model: @comment, url: update_comment_path(@commentable, @comment), method: :patch, class: "space-y-6" do |f| %>
+      <div>
+        <label for="comment_content" class="block text-sm font-medium text-gray-700">コメント内容</label>
+        <%= f.text_area :content, rows: 5,
+            class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500" %>
+      </div>
+
+      <div class="flex justify-end space-x-3">
+        <%= link_to "キャンセル", commentable_path, class: "px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50" %>
+        <button type="submit" class="px-4 py-2 bg-teal-600 text-white rounded-md text-sm font-medium hover:bg-teal-700">
+          更新する
+        </button>
+      </div>
+    <% end %>
+  </div>
+</div>

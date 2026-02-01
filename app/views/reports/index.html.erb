@@ -1,0 +1,224 @@
+<div class="space-y-6">
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <h1 class="text-2xl font-bold text-gray-900">Monthly Report</h1>
+  </div>
+
+  <% if @sites.empty? %>
+    <div class="bg-white rounded-lg shadow p-8 text-center">
+      <p class="text-gray-500">You need to add a site first to view reports.</p>
+      <div class="mt-4">
+        <%= link_to "Add Site", new_site_path, class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700" %>
+      </div>
+    </div>
+  <% else %>
+    <!-- Filters -->
+    <div class="bg-white shadow rounded-lg p-4">
+      <%= form_with url: reports_path, method: :get, data: { turbo_frame: "_top" }, class: "flex flex-wrap gap-4" do %>
+        <div>
+          <label for="site_id" class="block text-sm font-medium text-gray-700">Site</label>
+          <%= select_tag :site_id, options_from_collection_for_select(@sites, :id, :name, @current_site&.id),
+              class: "mt-1 block w-48 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm",
+              onchange: "this.form.submit()" %>
+        </div>
+        <div>
+          <label for="month" class="block text-sm font-medium text-gray-700">Month</label>
+          <%= month_field_tag :month, @current_month.strftime("%Y-%m"),
+              class: "mt-1 block w-40 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm",
+              onchange: "this.form.submit()" %>
+        </div>
+      <% end %>
+    </div>
+
+    <% if @current_site %>
+      <!-- Report Header -->
+      <div class="bg-white shadow rounded-lg p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">
+          <%= @current_site.name %> - <%= @current_month.strftime("%B %Y") %>
+        </h2>
+      </div>
+
+      <!-- Summary Cards -->
+      <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <!-- Average Rank -->
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-5">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Average Rank</dt>
+                  <dd class="flex items-baseline">
+                    <div class="text-2xl font-semibold text-gray-900">
+                      <%= @average_rank || "-" %>
+                    </div>
+                    <% if @rank_change %>
+                      <div class="ml-2 flex items-baseline text-sm font-semibold <%= @rank_change > 0 ? 'text-green-600' : @rank_change < 0 ? 'text-red-600' : 'text-gray-500' %>">
+                        <% if @rank_change > 0 %>
+                          <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                          </svg>
+                          <%= @rank_change %>
+                        <% elsif @rank_change < 0 %>
+                          <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 012 0v7.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                          </svg>
+                          <%= @rank_change.abs %>
+                        <% end %>
+                      </div>
+                    <% end %>
+                  </dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Keywords Improved -->
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-5">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <svg class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                </svg>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Keywords UP</dt>
+                  <dd class="text-2xl font-semibold text-green-600"><%= @keywords_improved %></dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Keywords Declined -->
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-5">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <svg class="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Keywords DOWN</dt>
+                  <dd class="text-2xl font-semibold text-red-600"><%= @keywords_declined %></dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Monthly Revenue -->
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-5">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <svg class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Monthly Revenue</dt>
+                  <dd class="flex items-baseline">
+                    <div class="text-2xl font-semibold text-gray-900">
+                      <%= number_to_currency(@current_month_revenue, unit: "\u00a5", precision: 0) %>
+                    </div>
+                    <% if @revenue_change_percent %>
+                      <div class="ml-2 flex items-baseline text-sm font-semibold <%= @revenue_change_percent > 0 ? 'text-green-600' : @revenue_change_percent < 0 ? 'text-red-600' : 'text-gray-500' %>">
+                        <%= @revenue_change_percent > 0 ? "+" : "" %><%= @revenue_change_percent %>%
+                      </div>
+                    <% end %>
+                  </dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <!-- Rank Trend -->
+        <div class="bg-white shadow rounded-lg p-6">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Average Rank Trend</h3>
+          <% if @rank_trend.any? %>
+            <div class="h-64">
+              <%= line_chart @rank_trend,
+                  height: "100%",
+                  colors: ["#0d9488"],
+                  library: {
+                    scales: {
+                      y: {
+                        reverse: true,
+                        min: 1,
+                        title: { display: true, text: 'Rank' }
+                      }
+                    }
+                  } %>
+            </div>
+          <% else %>
+            <div class="h-64 flex items-center justify-center">
+              <p class="text-gray-500">No rank data available.</p>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Revenue Trend -->
+        <div class="bg-white shadow rounded-lg p-6">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Revenue Trend</h3>
+          <% if @revenue_trend.any? %>
+            <div class="h-64">
+              <%= column_chart @revenue_trend,
+                  height: "100%",
+                  colors: ["#0d9488"],
+                  prefix: "\u00a5",
+                  thousands: "," %>
+            </div>
+          <% else %>
+            <div class="h-64 flex items-center justify-center">
+              <p class="text-gray-500">No revenue data available.</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Top Improving Keywords -->
+      <% if @top_improving.any? %>
+        <div class="bg-white shadow rounded-lg">
+          <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Top Improving Keywords</h3>
+          </div>
+          <ul class="divide-y divide-gray-200">
+            <% @top_improving.each do |data| %>
+              <li class="px-6 py-4">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="text-sm font-medium text-gray-900"><%= data[:keyword].word %></p>
+                  </div>
+                  <div class="flex items-center">
+                    <span class="text-sm text-gray-500"><%= data[:start_rank] %></span>
+                    <svg class="mx-2 h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                    <span class="text-sm font-semibold text-gray-900"><%= data[:end_rank] %></span>
+                    <span class="ml-3 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      +<%= data[:change] %>
+                    </span>
+                  </div>
+                </div>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
