@@ -1,13 +1,13 @@
 <div class="space-y-6">
   <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-    <h1 class="text-2xl font-bold text-gray-900">Monthly Report</h1>
+    <h1 class="text-2xl font-bold text-gray-900"><%= t('reports.title') %></h1>
   </div>
 
   <% if @sites.empty? %>
     <div class="bg-white rounded-lg shadow p-8 text-center">
-      <p class="text-gray-500">You need to add a site first to view reports.</p>
+      <p class="text-gray-500">レポートを表示するには、まずサイトを追加してください。</p>
       <div class="mt-4">
-        <%= link_to "Add Site", new_site_path, class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700" %>
+        <%= link_to t('sites.add_site'), new_site_path, class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700" %>
       </div>
     </div>
   <% else %>
@@ -15,13 +15,13 @@
     <div class="bg-white shadow rounded-lg p-4">
       <%= form_with url: reports_path, method: :get, data: { turbo_frame: "_top" }, class: "flex flex-wrap gap-4" do %>
         <div>
-          <label for="site_id" class="block text-sm font-medium text-gray-700">Site</label>
+          <label for="site_id" class="block text-sm font-medium text-gray-700"><%= t('activerecord.models.site') %></label>
           <%= select_tag :site_id, options_from_collection_for_select(@sites, :id, :name, @current_site&.id),
               class: "mt-1 block w-48 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm",
               onchange: "this.form.submit()" %>
         </div>
         <div>
-          <label for="month" class="block text-sm font-medium text-gray-700">Month</label>
+          <label for="month" class="block text-sm font-medium text-gray-700"><%= t('revenues.month') %></label>
           <%= month_field_tag :month, @current_month.strftime("%Y-%m"),
               class: "mt-1 block w-40 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm",
               onchange: "this.form.submit()" %>
@@ -33,7 +33,7 @@
       <!-- Report Header -->
       <div class="bg-white shadow rounded-lg p-6">
         <h2 class="text-xl font-semibold text-gray-900 mb-4">
-          <%= @current_site.name %> - <%= @current_month.strftime("%B %Y") %>
+          <%= @current_site.name %> - <%= l(@current_month, format: '%Y年%m月') %>
         </h2>
       </div>
 
@@ -50,7 +50,7 @@
               </div>
               <div class="ml-5 w-0 flex-1">
                 <dl>
-                  <dt class="text-sm font-medium text-gray-500 truncate">Average Rank</dt>
+                  <dt class="text-sm font-medium text-gray-500 truncate"><%= t('dashboard.average_rank') %></dt>
                   <dd class="flex items-baseline">
                     <div class="text-2xl font-semibold text-gray-900">
                       <%= @average_rank || "-" %>
@@ -88,7 +88,7 @@
               </div>
               <div class="ml-5 w-0 flex-1">
                 <dl>
-                  <dt class="text-sm font-medium text-gray-500 truncate">Keywords UP</dt>
+                  <dt class="text-sm font-medium text-gray-500 truncate">順位上昇</dt>
                   <dd class="text-2xl font-semibold text-green-600"><%= @keywords_improved %></dd>
                 </dl>
               </div>
@@ -107,7 +107,7 @@
               </div>
               <div class="ml-5 w-0 flex-1">
                 <dl>
-                  <dt class="text-sm font-medium text-gray-500 truncate">Keywords DOWN</dt>
+                  <dt class="text-sm font-medium text-gray-500 truncate">順位下落</dt>
                   <dd class="text-2xl font-semibold text-red-600"><%= @keywords_declined %></dd>
                 </dl>
               </div>
@@ -126,10 +126,10 @@
               </div>
               <div class="ml-5 w-0 flex-1">
                 <dl>
-                  <dt class="text-sm font-medium text-gray-500 truncate">Monthly Revenue</dt>
+                  <dt class="text-sm font-medium text-gray-500 truncate"><%= t('dashboard.monthly_revenue') %></dt>
                   <dd class="flex items-baseline">
                     <div class="text-2xl font-semibold text-gray-900">
-                      <%= number_to_currency(@current_month_revenue, unit: "\u00a5", precision: 0) %>
+                      <%= number_to_currency(@current_month_revenue) %>
                     </div>
                     <% if @revenue_change_percent %>
                       <div class="ml-2 flex items-baseline text-sm font-semibold <%= @revenue_change_percent > 0 ? 'text-green-600' : @revenue_change_percent < 0 ? 'text-red-600' : 'text-gray-500' %>">
@@ -148,7 +148,7 @@
       <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <!-- Rank Trend -->
         <div class="bg-white shadow rounded-lg p-6">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">Average Rank Trend</h3>
+          <h3 class="text-lg font-medium text-gray-900 mb-4"><%= t('dashboard.rank_trend') %></h3>
           <% if @rank_trend.any? %>
             <div class="h-64">
               <%= line_chart @rank_trend,
@@ -159,32 +159,32 @@
                       y: {
                         reverse: true,
                         min: 1,
-                        title: { display: true, text: 'Rank' }
+                        title: { display: true, text: '順位' }
                       }
                     }
                   } %>
             </div>
           <% else %>
             <div class="h-64 flex items-center justify-center">
-              <p class="text-gray-500">No rank data available.</p>
+              <p class="text-gray-500"><%= t('common.no_data') %></p>
             </div>
           <% end %>
         </div>
 
         <!-- Revenue Trend -->
         <div class="bg-white shadow rounded-lg p-6">
-          <h3 class="text-lg font-medium text-gray-900 mb-4">Revenue Trend</h3>
+          <h3 class="text-lg font-medium text-gray-900 mb-4"><%= t('dashboard.revenue_trend') %></h3>
           <% if @revenue_trend.any? %>
             <div class="h-64">
               <%= column_chart @revenue_trend,
                   height: "100%",
                   colors: ["#0d9488"],
-                  prefix: "\u00a5",
+                  prefix: "¥",
                   thousands: "," %>
             </div>
           <% else %>
             <div class="h-64 flex items-center justify-center">
-              <p class="text-gray-500">No revenue data available.</p>
+              <p class="text-gray-500"><%= t('common.no_data') %></p>
             </div>
           <% end %>
         </div>
@@ -194,7 +194,7 @@
       <% if @top_improving.any? %>
         <div class="bg-white shadow rounded-lg">
           <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
-            <h3 class="text-lg leading-6 font-medium text-gray-900">Top Improving Keywords</h3>
+            <h3 class="text-lg leading-6 font-medium text-gray-900">順位上昇キーワード TOP</h3>
           </div>
           <ul class="divide-y divide-gray-200">
             <% @top_improving.each do |data| %>

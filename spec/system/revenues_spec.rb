@@ -31,7 +31,7 @@ RSpec.describe "Revenue Management", type: :system do
     it "shows total revenue for the month" do
       visit revenues_path
 
-      expect(page).to have_content("Total")
+      expect(page).to have_content("合計")
       expect(page).to have_content("80,000")
     end
   end
@@ -42,19 +42,19 @@ RSpec.describe "Revenue Management", type: :system do
     it "shows the revenue creation form" do
       visit new_revenue_path
 
-      expect(page).to have_content("Add Revenue")
-      expect(page).to have_select("Site")
-      expect(page).to have_select("ASP Name")
-      expect(page).to have_field("Amount")
+      expect(page).to have_content("収益を登録")
+      expect(page).to have_select("サイト")
+      expect(page).to have_select("ASP名")
+      expect(page).to have_field("金額")
       expect(page).to have_css("#revenue_month")
-      expect(page).to have_button("Create Revenue")
+      expect(page).to have_button("保存")
     end
 
     it "shows all ASP options in dropdown" do
       visit new_revenue_path
 
-      expect(page).to have_select("ASP Name", options: [
-        "Select an ASP",
+      expect(page).to have_select("ASP名", options: [
+        "選択してください",
         "A8.net",
         "Amazon",
         "Rakuten",
@@ -76,11 +76,11 @@ RSpec.describe "Revenue Management", type: :system do
     it "shows the revenue edit form with existing data" do
       visit edit_revenue_path(revenue)
 
-      expect(page).to have_content("Edit Revenue")
-      expect(page).to have_select("Site", selected: "Revenue Test Site")
-      expect(page).to have_select("ASP Name", selected: "A8.net")
+      expect(page).to have_content("収益を編集")
+      expect(page).to have_select("サイト", selected: "Revenue Test Site")
+      expect(page).to have_select("ASP名", selected: "A8.net")
       # Amount is stored as decimal, so it may show as 25000.0
-      expect(find_field("Amount").value).to match(/25000(\.0)?/)
+      expect(find_field("金額").value).to match(/25000(\.0)?/)
       expect(page).to have_css("#revenue_month")
     end
   end
@@ -94,10 +94,10 @@ RSpec.describe "Revenue Management", type: :system do
       visit revenues_path
 
       accept_confirm do
-        click_button "Delete"
+        click_button "削除"
       end
 
-      expect(page).to have_content("Revenue was successfully deleted")
+      expect(page).to have_content("収益を削除しました")
     end
   end
 
@@ -132,7 +132,7 @@ RSpec.describe "Revenue Management", type: :system do
     it "displays the monthly revenue trend chart" do
       visit revenues_path
 
-      expect(page).to have_content("Monthly Revenue Trend")
+      expect(page).to have_content("月別収益")
       # Chart is rendered via Chartkick
       expect(page).to have_css("canvas", visible: :all)
     end

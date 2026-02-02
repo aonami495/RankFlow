@@ -4,7 +4,7 @@ class KeywordResearchService
   # In production, this would integrate with Google Keyword Planner API
   # or similar services. For now, we use mock data.
 
-  DIFFICULTY_LEVELS = %w[Low Medium High].freeze
+  DIFFICULTY_LEVELS = %w[低 中 高].freeze
 
   def self.search(query)
     new(query).search
@@ -35,8 +35,8 @@ class KeywordResearchService
   end
 
   def generate_related_keywords
-    prefixes = ["best", "top", "how to", "what is", ""]
-    suffixes = ["guide", "tips", "tutorial", "examples", "2024", "free", ""]
+    prefixes = ["おすすめ", "人気", "", ""]
+    suffixes = ["比較", "ランキング", "選び方", "口コミ", "2024", ""]
 
     related = []
 
@@ -54,14 +54,14 @@ class KeywordResearchService
 
   def generate_long_tail_keywords
     templates = [
-      "#{@query} for beginners",
-      "#{@query} vs alternative",
-      "how to use #{@query}",
-      "#{@query} step by step",
-      "#{@query} complete guide",
-      "#{@query} best practices",
-      "why #{@query} is important",
-      "#{@query} mistakes to avoid"
+      "#{@query} 初心者向け",
+      "#{@query} 代替品",
+      "#{@query} 使い方",
+      "#{@query} 手順",
+      "#{@query} 完全ガイド",
+      "#{@query} コツ",
+      "#{@query} が重要な理由",
+      "#{@query} 失敗しない方法"
     ]
 
     templates.sample(5).map { |kw| analyze_keyword(kw) }
@@ -80,9 +80,9 @@ class KeywordResearchService
     {
       score: score,
       level: case score
-             when 1..33 then "Low"
-             when 34..66 then "Medium"
-             else "High"
+             when 1..33 then "低"
+             when 34..66 then "中"
+             else "高"
              end,
       color: case score
              when 1..33 then "green"

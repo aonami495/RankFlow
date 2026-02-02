@@ -1,32 +1,32 @@
 <div class="space-y-6">
   <div>
-    <h1 class="text-2xl font-bold text-gray-900">Rewrite Suggestions</h1>
-    <p class="mt-1 text-sm text-gray-500">Articles prioritized by potential improvement impact</p>
+    <h1 class="text-2xl font-bold text-gray-900">リライト提案</h1>
+    <p class="mt-1 text-sm text-gray-500">改善効果の高い順に記事を優先表示</p>
   </div>
 
   <div class="bg-white rounded-lg shadow p-6">
-    <h3 class="text-lg font-medium text-gray-900 mb-4">How Priority Score is Calculated</h3>
+    <h3 class="text-lg font-medium text-gray-900 mb-4">優先度スコアの計算方法</h3>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
       <div class="bg-gray-50 p-4 rounded-lg">
-        <h4 class="font-medium text-gray-700">Rank Position</h4>
+        <h4 class="font-medium text-gray-700">順位</h4>
         <ul class="mt-2 text-gray-600 space-y-1">
-          <li>Top 10: +30 points</li>
-          <li>11-20: +20 points</li>
-          <li>21-50: +10 points</li>
+          <li>1〜10位: +30ポイント</li>
+          <li>11〜20位: +20ポイント</li>
+          <li>21〜50位: +10ポイント</li>
         </ul>
       </div>
       <div class="bg-gray-50 p-4 rounded-lg">
-        <h4 class="font-medium text-gray-700">Rank Decline</h4>
+        <h4 class="font-medium text-gray-700">順位下落</h4>
         <ul class="mt-2 text-gray-600 space-y-1">
-          <li>+2 points per position dropped</li>
-          <li>Recent declines weighted more</li>
+          <li>1位下落ごとに+2ポイント</li>
+          <li>直近の下落は重み付け</li>
         </ul>
       </div>
       <div class="bg-gray-50 p-4 rounded-lg">
-        <h4 class="font-medium text-gray-700">Revenue Impact</h4>
+        <h4 class="font-medium text-gray-700">収益影響</h4>
         <ul class="mt-2 text-gray-600 space-y-1">
-          <li>+1 point per 1,000 yen revenue</li>
-          <li>Higher revenue = higher priority</li>
+          <li>収益1,000円ごとに+1ポイント</li>
+          <li>収益が高い = 優先度が高い</li>
         </ul>
       </div>
     </div>
@@ -37,14 +37,14 @@
       <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
           <tr>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Article</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keywords</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Avg Rank</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Revenue</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Score</th>
-            <th scope="col" class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">優先度</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">記事</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ステータス</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">キーワード</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">平均順位</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">収益</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">スコア</th>
+            <th scope="col" class="relative px-6 py-3"><span class="sr-only">アクション</span></th>
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
@@ -101,11 +101,11 @@
                       when 50..99 then 'bg-yellow-100 text-yellow-800'
                       else 'bg-gray-100 text-gray-800'
                       end %>">
-                  <%= score %> pts
+                  <%= score %>点
                 </span>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <%= link_to "View", site_article_path(article.site, article), class: "text-teal-600 hover:text-teal-900" %>
+                <%= link_to "詳細", site_article_path(article.site, article), class: "text-teal-600 hover:text-teal-900" %>
               </td>
             </tr>
           <% end %>
@@ -117,8 +117,8 @@
       <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
       </svg>
-      <h3 class="mt-2 text-sm font-medium text-gray-900">No articles with keywords</h3>
-      <p class="mt-1 text-sm text-gray-500">Add articles and associate keywords to see rewrite suggestions.</p>
+      <h3 class="mt-2 text-sm font-medium text-gray-900">キーワードが紐付いた記事がありません</h3>
+      <p class="mt-1 text-sm text-gray-500">記事を追加してキーワードを紐付けると、リライト提案が表示されます。</p>
     </div>
   <% end %>
 </div>

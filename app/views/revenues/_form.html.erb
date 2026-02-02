@@ -9,7 +9,7 @@
         </div>
         <div class="ml-3">
           <h3 class="text-sm font-medium text-red-800">
-            <%= pluralize(revenue.errors.count, "error") %> prohibited this revenue from being saved:
+            <%= revenue.errors.count %>件のエラーがあります
           </h3>
           <div class="mt-2 text-sm text-red-700">
             <ul class="list-disc pl-5 space-y-1">
@@ -24,19 +24,19 @@
   <% end %>
 
   <div>
-    <%= form.label :site_id, "Site", class: "block text-sm font-medium text-gray-700" %>
-    <%= form.collection_select :site_id, sites, :id, :name, { prompt: "Select a site" },
+    <%= form.label :site_id, t('activerecord.models.site'), class: "block text-sm font-medium text-gray-700" %>
+    <%= form.collection_select :site_id, sites, :id, :name, { prompt: t('helpers.select.prompt') },
         class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" %>
   </div>
 
   <div>
-    <%= form.label :asp_name, "ASP Name", class: "block text-sm font-medium text-gray-700" %>
-    <%= form.select :asp_name, Revenue::ASP_OPTIONS, { prompt: "Select an ASP" },
+    <%= form.label :asp_name, t('revenues.asp_name'), class: "block text-sm font-medium text-gray-700" %>
+    <%= form.select :asp_name, Revenue::ASP_OPTIONS, { prompt: t('helpers.select.prompt') },
         class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" %>
   </div>
 
   <div>
-    <%= form.label :amount, "Amount", class: "block text-sm font-medium text-gray-700" %>
+    <%= form.label :amount, t('revenues.amount'), class: "block text-sm font-medium text-gray-700" %>
     <div class="mt-1 relative rounded-md shadow-sm">
       <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
         <span class="text-gray-500 sm:text-sm">&yen;</span>
@@ -48,13 +48,13 @@
   </div>
 
   <div>
-    <%= form.label :month, "Month", class: "block text-sm font-medium text-gray-700" %>
+    <%= form.label :month, t('revenues.month'), class: "block text-sm font-medium text-gray-700" %>
     <%= form.month_field :month,
         class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" %>
   </div>
 
   <div class="flex justify-end space-x-3">
-    <%= link_to "Cancel", revenues_path, class: "px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500" %>
-    <%= form.submit class: "px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 cursor-pointer" %>
+    <%= link_to t('common.cancel'), revenues_path, class: "px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500" %>
+    <%= form.submit t('common.save'), class: "px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 cursor-pointer" %>
   </div>
 <% end %>

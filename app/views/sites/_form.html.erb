@@ -9,7 +9,7 @@
         </div>
         <div class="ml-3">
           <h3 class="text-sm font-medium text-red-800">
-            <%= pluralize(site.errors.count, "error") %> prohibited this site from being saved:
+            <%= site.errors.count %>件のエラーがあります
           </h3>
           <div class="mt-2 text-sm text-red-700">
             <ul class="list-disc pl-5 space-y-1">
@@ -24,23 +24,23 @@
   <% end %>
 
   <div>
-    <%= form.label :name, class: "block text-sm font-medium text-gray-700" %>
-    <%= form.text_field :name, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm", placeholder: "My Blog" %>
+    <%= form.label :name, t('activerecord.attributes.site.name'), class: "block text-sm font-medium text-gray-700" %>
+    <%= form.text_field :name, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm", placeholder: "マイブログ" %>
   </div>
 
   <div>
-    <%= form.label :url, class: "block text-sm font-medium text-gray-700" %>
+    <%= form.label :url, t('activerecord.attributes.site.url'), class: "block text-sm font-medium text-gray-700" %>
     <%= form.url_field :url, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm", placeholder: "https://example.com" %>
-    <p class="mt-1 text-sm text-gray-500">Enter the full URL including https://</p>
+    <p class="mt-1 text-sm text-gray-500">https:// を含めた完全なURLを入力してください</p>
   </div>
 
   <div>
-    <%= form.label :description, class: "block text-sm font-medium text-gray-700" %>
-    <%= form.text_area :description, rows: 3, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm", placeholder: "Brief description of this site (optional)" %>
+    <%= form.label :description, t('activerecord.attributes.site.description'), class: "block text-sm font-medium text-gray-700" %>
+    <%= form.text_area :description, rows: 3, class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm", placeholder: "サイトの簡単な説明（任意）" %>
   </div>
 
   <div class="flex justify-end space-x-3">
-    <%= link_to "Cancel", sites_path, class: "px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500" %>
-    <%= form.submit class: "px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 cursor-pointer" %>
+    <%= link_to t('common.cancel'), sites_path, class: "px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500" %>
+    <%= form.submit t('common.save'), class: "px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 cursor-pointer" %>
   </div>
 <% end %>

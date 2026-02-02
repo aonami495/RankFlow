@@ -1,11 +1,11 @@
 <div class="space-y-6">
   <div class="flex justify-between items-center">
     <div>
-      <h1 class="text-2xl font-bold text-gray-900">Alerts</h1>
-      <p class="mt-1 text-sm text-gray-500"><%= @unread_count %> unread alerts</p>
+      <h1 class="text-2xl font-bold text-gray-900"><%= t('alerts.title') %></h1>
+      <p class="mt-1 text-sm text-gray-500"><%= @unread_count %>件の<%= t('alerts.unread') %></p>
     </div>
     <% if @alerts.unread.any? %>
-      <%= button_to "Mark All as Read", mark_all_as_read_alerts_path, method: :post, class: "inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+      <%= button_to t('alerts.mark_all_as_read'), mark_all_as_read_alerts_path, method: :post, class: "inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
     <% end %>
   </div>
 
@@ -69,10 +69,10 @@
                 </div>
               </div>
               <div class="flex items-center space-x-4">
-                <p class="text-sm text-gray-500"><%= time_ago_in_words(alert.triggered_at) %> ago</p>
+                <p class="text-sm text-gray-500"><%= time_ago_in_words(alert.triggered_at) %>前</p>
                 <% unless alert.read? %>
                   <%= button_to mark_as_read_alert_path(alert), method: :patch, class: "text-sm text-teal-600 hover:text-teal-900" do %>
-                    Mark as read
+                    <%= t('alerts.mark_as_read') %>
                   <% end %>
                 <% end %>
               </div>
@@ -90,8 +90,8 @@
       <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
       </svg>
-      <h3 class="mt-2 text-sm font-medium text-gray-900">No alerts</h3>
-      <p class="mt-1 text-sm text-gray-500">You're all caught up! No alerts at this time.</p>
+      <h3 class="mt-2 text-sm font-medium text-gray-900"><%= t('alerts.no_alerts') %></h3>
+      <p class="mt-1 text-sm text-gray-500">現在、アラートはありません。</p>
     </div>
   <% end %>
 </div>

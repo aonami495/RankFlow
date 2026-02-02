@@ -15,25 +15,24 @@ RSpec.describe "Keywords Management", type: :system do
       visit root_path
 
       # Click the first "Add Keyword" link in the header area
-      first(:link, "Add Keyword").click
+      first(:link, "キーワードを追加").click
 
-      expect(page).to have_content("Add Keyword")
+      expect(page).to have_content("新規キーワード登録")
 
-      fill_in "Keyword", with: "SEO best practices"
-      fill_in "Target URL (optional)", with: "https://example.com/seo-guide"
+      fill_in "キーワード", with: "SEO best practices"
+      fill_in "ターゲットURL", with: "https://example.com/seo-guide"
 
-      click_button "Create Keyword"
+      click_button "保存"
 
-      expect(page).to have_content("Keyword was successfully added")
+      expect(page).to have_content("キーワードを追加しました")
     end
 
     it "shows validation error for empty keyword" do
       visit new_site_keyword_path(site)
 
-      click_button "Create Keyword"
+      click_button "保存"
 
-      expect(page).to have_content("error")
-      expect(page).to have_content("Word can't be blank")
+      expect(page).to have_content("エラー")
     end
   end
 
@@ -62,13 +61,13 @@ RSpec.describe "Keywords Management", type: :system do
     it "allows user to edit a keyword" do
       visit root_path
 
-      click_link "Edit"
+      click_link "編集"
 
-      fill_in "Keyword", with: "updated keyword"
+      fill_in "キーワード", with: "updated keyword"
 
-      click_button "Update Keyword"
+      click_button "保存"
 
-      expect(page).to have_content("Keyword was successfully updated")
+      expect(page).to have_content("キーワードを更新しました")
     end
   end
 
@@ -86,7 +85,7 @@ RSpec.describe "Keywords Management", type: :system do
       visit root_path
 
       within("table") do
-        expect(page).to have_content("Error")
+        expect(page).to have_content("エラーが発生しました")
         expect(page).to have_content("error keyword")
       end
     end

@@ -1,6 +1,6 @@
 <%= turbo_frame_tag "search-results" do %>
   <div class="space-y-6">
-    <!-- Main Keyword Analysis -->
+    <!-- メインキーワード分析 -->
     <div class="bg-white shadow rounded-lg overflow-hidden">
       <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
         <h3 class="text-lg leading-6 font-medium text-gray-900">
@@ -10,14 +10,14 @@
       <div class="p-6">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div class="text-center p-4 bg-gray-50 rounded-lg">
-            <dt class="text-sm font-medium text-gray-500">Search Volume</dt>
+            <dt class="text-sm font-medium text-gray-500">検索ボリューム</dt>
             <dd class="mt-1 text-2xl font-semibold text-gray-900">
               <%= number_with_delimiter(results[:main_keyword][:search_volume]) %>
             </dd>
-            <dd class="text-xs text-gray-500">monthly</dd>
+            <dd class="text-xs text-gray-500">月間</dd>
           </div>
           <div class="text-center p-4 bg-gray-50 rounded-lg">
-            <dt class="text-sm font-medium text-gray-500">Difficulty</dt>
+            <dt class="text-sm font-medium text-gray-500">難易度</dt>
             <dd class="mt-1">
               <span class="inline-flex items-center px-3 py-1 rounded-full text-lg font-semibold
                 <%= case results[:main_keyword][:difficulty][:color]
@@ -35,20 +35,20 @@
             <dd class="mt-1 text-2xl font-semibold text-gray-900">
               ¥<%= results[:main_keyword][:cpc] %>
             </dd>
-            <dd class="text-xs text-gray-500">avg.</dd>
+            <dd class="text-xs text-gray-500">平均</dd>
           </div>
           <div class="text-center p-4 bg-gray-50 rounded-lg">
-            <dt class="text-sm font-medium text-gray-500">Trend</dt>
+            <dt class="text-sm font-medium text-gray-500">トレンド</dt>
             <dd class="mt-1 text-2xl font-semibold <%= results[:main_keyword][:trend] >= 0 ? 'text-green-600' : 'text-red-600' %>">
               <%= results[:main_keyword][:trend] >= 0 ? '+' : '' %><%= results[:main_keyword][:trend] %>%
             </dd>
-            <dd class="text-xs text-gray-500">vs last year</dd>
+            <dd class="text-xs text-gray-500">前年比</dd>
           </div>
         </div>
 
         <% if site %>
           <div class="mt-4 flex justify-end">
-            <%= button_to "Add to #{site.name}", site_keywords_path(site, keyword: { word: results[:main_keyword][:keyword] }),
+            <%= button_to "#{site.name}に追加", site_keywords_path(site, keyword: { word: results[:main_keyword][:keyword] }),
                 method: :post,
                 class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700" %>
           </div>
@@ -56,22 +56,22 @@
       </div>
     </div>
 
-    <!-- Related Keywords -->
+    <!-- 関連キーワード -->
     <% if results[:related_keywords].any? %>
       <div class="bg-white shadow rounded-lg overflow-hidden">
         <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
-          <h3 class="text-lg leading-6 font-medium text-gray-900">Related Keywords</h3>
+          <h3 class="text-lg leading-6 font-medium text-gray-900">関連キーワード</h3>
         </div>
         <div class="overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keyword</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Volume</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Difficulty</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">キーワード</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ボリューム</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">難易度</th>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CPC</th>
                 <% if site %>
-                  <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                  <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">アクション</th>
                 <% end %>
               </tr>
             </thead>
@@ -99,7 +99,7 @@
                   </td>
                   <% if site %>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <%= button_to "Add", site_keywords_path(site, keyword: { word: kw[:keyword] }),
+                      <%= button_to "追加", site_keywords_path(site, keyword: { word: kw[:keyword] }),
                           method: :post,
                           class: "text-teal-600 hover:text-teal-900" %>
                     </td>
@@ -112,23 +112,23 @@
       </div>
     <% end %>
 
-    <!-- Long-tail Keywords -->
+    <!-- ロングテールキーワード -->
     <% if results[:long_tail_keywords].any? %>
       <div class="bg-white shadow rounded-lg overflow-hidden">
         <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
-          <h3 class="text-lg leading-6 font-medium text-gray-900">Long-tail Keywords</h3>
-          <p class="mt-1 text-sm text-gray-500">Lower competition, higher conversion potential</p>
+          <h3 class="text-lg leading-6 font-medium text-gray-900">ロングテールキーワード</h3>
+          <p class="mt-1 text-sm text-gray-500">競合が少なく、コンバージョン率が高い傾向</p>
         </div>
         <div class="overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keyword</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Volume</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Difficulty</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">キーワード</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ボリューム</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">難易度</th>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CPC</th>
                 <% if site %>
-                  <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                  <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">アクション</th>
                 <% end %>
               </tr>
             </thead>
@@ -156,7 +156,7 @@
                   </td>
                   <% if site %>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <%= button_to "Add", site_keywords_path(site, keyword: { word: kw[:keyword] }),
+                      <%= button_to "追加", site_keywords_path(site, keyword: { word: kw[:keyword] }),
                           method: :post,
                           class: "text-teal-600 hover:text-teal-900" %>
                     </td>

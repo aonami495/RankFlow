@@ -24,12 +24,16 @@ gem "redis", ">= 4.0.1"
 # Authentication
 gem "devise", "~> 4.9"
 
+# I18n (日本語化)
+gem "rails-i18n", "~> 7.0"
+gem "devise-i18n", "~> 1.12"
+
 # Background Jobs
 gem "sidekiq", "~> 7.2"
 gem "sidekiq-cron", "~> 1.11"
 
 # API Integration
-gem "google-apis-customsearch_v1", "~> 0.14"
+gem "google_search_results"
 gem "faraday", "~> 2.8"
 gem "ruby-openai", "~> 6.3"
 

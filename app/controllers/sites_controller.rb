@@ -14,7 +14,7 @@ class SitesController < ApplicationController
 
   def new
     unless current_user.can_add_site?
-      redirect_to sites_path, alert: "You have reached the maximum number of sites for your plan."
+      redirect_to sites_path, alert: t("sites.plan_limit_reached")
       return
     end
     @site = current_user.sites.build
@@ -22,14 +22,14 @@ class SitesController < ApplicationController
 
   def create
     unless current_user.can_add_site?
-      redirect_to sites_path, alert: "You have reached the maximum number of sites for your plan."
+      redirect_to sites_path, alert: t("sites.plan_limit_reached")
       return
     end
 
     @site = current_user.sites.build(site_params)
 
     if @site.save
-      redirect_to @site, notice: "Site was successfully created."
+      redirect_to @site, notice: t("sites.created_success")
     else
       render :new, status: :unprocessable_entity
     end
@@ -40,7 +40,7 @@ class SitesController < ApplicationController
 
   def update
     if @site.update(site_params)
-      redirect_to @site, notice: "Site was successfully updated."
+      redirect_to @site, notice: t("sites.updated_success")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -48,7 +48,7 @@ class SitesController < ApplicationController
 
   def destroy
     @site.destroy
-    redirect_to sites_path, notice: "Site was successfully deleted."
+    redirect_to sites_path, notice: t("sites.deleted_success")
   end
 
   private

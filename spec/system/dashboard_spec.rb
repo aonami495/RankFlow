@@ -13,10 +13,10 @@ RSpec.describe "Dashboard", type: :system do
     it "shows empty state message when no sites exist" do
       visit root_path
 
-      expect(page).to have_content("Dashboard")
-      expect(page).to have_content("No sites yet")
-      expect(page).to have_content("Get started by adding your first site")
-      expect(page).to have_link("Add Site")
+      expect(page).to have_content("ダッシュボード")
+      expect(page).to have_content("サイトがまだ登録されていません")
+      expect(page).to have_content("最初のサイトを登録する")
+      expect(page).to have_link("サイトを追加")
     end
   end
 
@@ -35,10 +35,10 @@ RSpec.describe "Dashboard", type: :system do
     it "displays site overview cards" do
       visit root_path
 
-      expect(page).to have_content("Dashboard")
-      expect(page).to have_content("Average Rank")
-      expect(page).to have_content("Keywords")
-      expect(page).to have_content("This Month Revenue")
+      expect(page).to have_content("ダッシュボード")
+      expect(page).to have_content("平均順位")
+      expect(page).to have_content("キーワード数")
+      expect(page).to have_content("今月の収益")
     end
 
     it "displays keywords table with ranks" do
@@ -106,8 +106,8 @@ RSpec.describe "Dashboard", type: :system do
         visit root_path
 
         within("table") do
-          # Failed keywords should show "Error" instead of rank
-          expect(page).to have_content("Error").twice
+          # Failed keywords should show error message
+          expect(page).to have_content("エラーが発生しました").twice
           # Working keyword should show rank
           expect(page).to have_content("10")
         end
@@ -156,7 +156,7 @@ RSpec.describe "Dashboard", type: :system do
     it "displays rank trends chart" do
       visit root_path
 
-      expect(page).to have_content("Rank Trends (30 Days)")
+      expect(page).to have_content("順位推移")
       # Chartkick renders a canvas element
       expect(page).to have_css("canvas", visible: :all)
     end
@@ -164,7 +164,7 @@ RSpec.describe "Dashboard", type: :system do
     it "displays revenue chart" do
       visit root_path
 
-      expect(page).to have_content("Revenue (6 Months)")
+      expect(page).to have_content("収益推移")
     end
   end
 end

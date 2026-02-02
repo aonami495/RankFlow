@@ -29,13 +29,13 @@ class RevenuesController < ApplicationController
     @revenue = Revenue.new(revenue_params)
 
     if @revenue.site&.user != current_user
-      redirect_to revenues_path, alert: "Invalid site selected."
+      redirect_to revenues_path, alert: t("revenues.invalid_site")
       return
     end
 
     if @revenue.save
       redirect_to revenues_path(site_id: @revenue.site_id, month: @revenue.month),
-                  notice: "Revenue was successfully added."
+                  notice: t("revenues.created_success")
     else
       @sites = current_user.sites
       render :new, status: :unprocessable_entity
@@ -51,14 +51,14 @@ class RevenuesController < ApplicationController
     if revenue_params[:site_id].present? && revenue_params[:site_id].to_i != @revenue.site_id
       new_site = current_user.sites.find_by(id: revenue_params[:site_id])
       unless new_site
-        redirect_to revenues_path, alert: "Invalid site selected."
+        redirect_to revenues_path, alert: t("revenues.invalid_site")
         return
       end
     end
 
     if @revenue.update(revenue_params)
       redirect_to revenues_path(site_id: @revenue.site_id, month: @revenue.month),
-                  notice: "Revenue was successfully updated."
+                  notice: t("revenues.updated_success")
     else
       @sites = current_user.sites
       render :edit, status: :unprocessable_entity
@@ -70,7 +70,7 @@ class RevenuesController < ApplicationController
     month = @revenue.month
     @revenue.destroy
     redirect_to revenues_path(site_id: site_id, month: month),
-                notice: "Revenue was successfully deleted."
+                notice: t("revenues.deleted_success")
   end
 
   private

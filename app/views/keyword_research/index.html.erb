@@ -1,53 +1,53 @@
 <div class="space-y-6">
   <div>
-    <h1 class="text-2xl font-bold text-gray-900">Keyword Research</h1>
-    <p class="mt-1 text-sm text-gray-500">Discover new keyword opportunities for your content</p>
+    <h1 class="text-2xl font-bold text-gray-900">キーワード調査</h1>
+    <p class="mt-1 text-sm text-gray-500">コンテンツのための新しいキーワードを発見</p>
   </div>
 
-  <!-- Search Form -->
+  <!-- 検索フォーム -->
   <div class="bg-white shadow rounded-lg p-6">
     <%= form_with url: search_keyword_research_path, method: :get, data: { turbo_frame: "search-results" }, class: "space-y-4" do |form| %>
       <div class="flex flex-col sm:flex-row gap-4">
         <div class="flex-1">
-          <label for="query" class="block text-sm font-medium text-gray-700">Seed Keyword</label>
+          <label for="query" class="block text-sm font-medium text-gray-700">シードキーワード</label>
           <input type="text" name="query" id="query" value="<%= params[:query] %>"
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
-            placeholder="Enter a keyword to research...">
+            placeholder="調査するキーワードを入力...">
         </div>
         <% if @sites.any? %>
           <div class="w-full sm:w-48">
-            <label for="site_id" class="block text-sm font-medium text-gray-700">Add to Site</label>
+            <label for="site_id" class="block text-sm font-medium text-gray-700">サイトに追加</label>
             <%= select_tag :site_id, options_from_collection_for_select(@sites, :id, :name, @current_site&.id),
-                include_blank: "Select site...",
+                include_blank: "サイトを選択...",
                 class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" %>
           </div>
         <% end %>
         <div class="flex items-end">
-          <%= form.submit "Research", class: "w-full sm:w-auto px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 cursor-pointer" %>
+          <%= form.submit "調査", class: "w-full sm:w-auto px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 cursor-pointer" %>
         </div>
       </div>
     <% end %>
   </div>
 
-  <!-- Results Frame -->
+  <!-- 結果フレーム -->
   <%= turbo_frame_tag "search-results" do %>
     <div class="bg-white shadow rounded-lg p-8 text-center">
       <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
       </svg>
-      <h3 class="mt-2 text-sm font-medium text-gray-900">Enter a keyword to start</h3>
-      <p class="mt-1 text-sm text-gray-500">We'll analyze search volume, difficulty, and suggest related keywords.</p>
+      <h3 class="mt-2 text-sm font-medium text-gray-900">キーワードを入力して開始</h3>
+      <p class="mt-1 text-sm text-gray-500">検索ボリューム、難易度を分析し、関連キーワードを提案します。</p>
     </div>
   <% end %>
 
-  <!-- Tips -->
+  <!-- ヒント -->
   <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-    <h4 class="text-sm font-medium text-blue-800">Research Tips</h4>
+    <h4 class="text-sm font-medium text-blue-800">調査のヒント</h4>
     <ul class="mt-2 text-sm text-blue-700 list-disc list-inside space-y-1">
-      <li>Start with a broad topic keyword to discover related opportunities</li>
-      <li>Look for keywords with high search volume but low difficulty</li>
-      <li>Long-tail keywords often have less competition</li>
-      <li>Consider search intent when choosing keywords to target</li>
+      <li>幅広いトピックキーワードから始めて関連する機会を発見しましょう</li>
+      <li>検索ボリュームが高く、難易度が低いキーワードを探しましょう</li>
+      <li>ロングテールキーワードは競合が少ないことが多いです</li>
+      <li>ターゲットキーワードを選ぶ際は検索意図を考慮しましょう</li>
     </ul>
   </div>
 </div>

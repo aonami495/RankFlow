@@ -11,7 +11,7 @@ class KeywordsController < ApplicationController
 
   def new
     unless current_user.can_add_keyword?(@site)
-      redirect_to site_path(@site), alert: "You have reached the maximum number of keywords for your plan."
+      redirect_to site_path(@site), alert: t("keywords.plan_limit_reached")
       return
     end
     @keyword = @site.keywords.build
@@ -19,14 +19,14 @@ class KeywordsController < ApplicationController
 
   def create
     unless current_user.can_add_keyword?(@site)
-      redirect_to site_path(@site), alert: "You have reached the maximum number of keywords for your plan."
+      redirect_to site_path(@site), alert: t("keywords.plan_limit_reached")
       return
     end
 
     @keyword = @site.keywords.build(keyword_params)
 
     if @keyword.save
-      redirect_to site_path(@site), notice: "Keyword was successfully added. Rank will be checked within 24 hours."
+      redirect_to site_path(@site), notice: t("keywords.created_success")
     else
       render :new, status: :unprocessable_entity
     end
@@ -37,7 +37,7 @@ class KeywordsController < ApplicationController
 
   def update
     if @keyword.update(keyword_params)
-      redirect_to site_path(@site), notice: "Keyword was successfully updated."
+      redirect_to site_path(@site), notice: t("keywords.updated_success")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -45,7 +45,7 @@ class KeywordsController < ApplicationController
 
   def destroy
     @keyword.destroy
-    redirect_to site_path(@site), notice: "Keyword was successfully deleted."
+    redirect_to site_path(@site), notice: t("keywords.deleted_success")
   end
 
   private

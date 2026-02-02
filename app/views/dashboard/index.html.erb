@@ -1,9 +1,9 @@
 <div class="space-y-6">
   <div class="flex justify-between items-center">
-    <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
+    <h1 class="text-2xl font-bold text-gray-900"><%= t('dashboard.title') %></h1>
     <% if @sites.any? %>
       <%= form_with url: dashboard_path, method: :get, data: { turbo_frame: "_top" }, class: "flex items-center" do %>
-        <label for="site_id" class="mr-2 text-sm text-gray-600">Site:</label>
+        <label for="site_id" class="mr-2 text-sm text-gray-600"><%= t('activerecord.models.site') %>:</label>
         <%= select_tag :site_id, options_from_collection_for_select(@sites, :id, :name, @current_site&.id),
             class: "block w-48 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm",
             onchange: "this.form.submit()" %>
@@ -16,10 +16,10 @@
       <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
       </svg>
-      <h3 class="mt-2 text-sm font-medium text-gray-900">No sites yet</h3>
-      <p class="mt-1 text-sm text-gray-500">Get started by adding your first site.</p>
+      <h3 class="mt-2 text-sm font-medium text-gray-900"><%= t('dashboard.no_sites') %></h3>
+      <p class="mt-1 text-sm text-gray-500"><%= t('dashboard.add_first_site') %></p>
       <div class="mt-6">
-        <%= link_to "Add Site", new_site_path, class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500" %>
+        <%= link_to t('sites.add_site'), new_site_path, class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500" %>
       </div>
     </div>
   <% else %>
@@ -53,7 +53,7 @@
             </div>
             <div class="ml-5 w-0 flex-1">
               <dl>
-                <dt class="text-sm font-medium text-gray-500 truncate">Average Rank</dt>
+                <dt class="text-sm font-medium text-gray-500 truncate"><%= t('dashboard.average_rank') %></dt>
                 <dd class="flex items-baseline">
                   <div class="text-2xl font-semibold text-gray-900">
                     <%= @current_site&.respond_to?(:average_rank) ? @current_site.average_rank : "-" %>
@@ -75,7 +75,7 @@
             </div>
             <div class="ml-5 w-0 flex-1">
               <dl>
-                <dt class="text-sm font-medium text-gray-500 truncate">Keywords</dt>
+                <dt class="text-sm font-medium text-gray-500 truncate"><%= t('dashboard.total_keywords') %></dt>
                 <dd class="flex items-baseline">
                   <div class="text-2xl font-semibold text-gray-900">
                     <%= @current_site&.keywords&.count || 0 %>
@@ -97,10 +97,10 @@
             </div>
             <div class="ml-5 w-0 flex-1">
               <dl>
-                <dt class="text-sm font-medium text-gray-500 truncate">This Month Revenue</dt>
+                <dt class="text-sm font-medium text-gray-500 truncate"><%= t('dashboard.monthly_revenue') %></dt>
                 <dd class="flex items-baseline">
                   <div class="text-2xl font-semibold text-gray-900">
-                    <%= number_to_currency(@current_site&.respond_to?(:total_revenue) ? @current_site.total_revenue : 0, unit: "\u00a5", precision: 0) %>
+                    <%= number_to_currency(@current_site&.respond_to?(:total_revenue) ? @current_site.total_revenue : 0) %>
                   </div>
                 </dd>
               </dl>
@@ -113,23 +113,23 @@
     <!-- Charts -->
     <div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
       <div class="bg-white shadow rounded-lg p-6">
-        <h3 class="text-lg font-medium text-gray-900 mb-4">Rank Trends (30 Days)</h3>
+        <h3 class="text-lg font-medium text-gray-900 mb-4"><%= t('dashboard.rank_trend') %>（30日間）</h3>
         <% if @rank_chart_data.present? && @rank_chart_data.any? { |d| d[:data].present? } %>
           <%= line_chart @rank_chart_data, min: 1, max: 100, colors: ["#0d9488", "#14b8a6", "#2dd4bf", "#5eead4", "#99f6e4"], library: { scales: { y: { reverse: true } } } %>
         <% else %>
           <div class="h-64 flex items-center justify-center text-gray-400">
-            <p>No rank data available yet</p>
+            <p><%= t('common.no_data') %></p>
           </div>
         <% end %>
       </div>
 
       <div class="bg-white shadow rounded-lg p-6">
-        <h3 class="text-lg font-medium text-gray-900 mb-4">Revenue (6 Months)</h3>
+        <h3 class="text-lg font-medium text-gray-900 mb-4"><%= t('dashboard.revenue_trend') %>（6ヶ月）</h3>
         <% if @revenue_chart_data.present? && @revenue_chart_data.any? %>
           <%= column_chart @revenue_chart_data, prefix: "¥", colors: ["#0d9488"] %>
         <% else %>
           <div class="h-64 flex items-center justify-center text-gray-400">
-            <p>No revenue data available yet</p>
+            <p><%= t('common.no_data') %></p>
           </div>
         <% end %>
       </div>
@@ -138,13 +138,13 @@
     <!-- Keywords Table -->
     <div class="bg-white shadow rounded-lg">
       <div class="px-4 py-5 border-b border-gray-200 sm:px-6 flex justify-between items-center">
-        <h3 class="text-lg leading-6 font-medium text-gray-900">Keywords</h3>
+        <h3 class="text-lg leading-6 font-medium text-gray-900"><%= t('keywords.title') %></h3>
         <% if @current_site && current_user.can_add_keyword?(@current_site) %>
           <%= link_to new_site_keyword_path(@current_site), class: "inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700" do %>
             <svg class="-ml-0.5 mr-1.5 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
             </svg>
-            Add Keyword
+            <%= t('keywords.add_keyword') %>
           <% end %>
         <% end %>
       </div>
@@ -153,11 +153,11 @@
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keyword</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Current Rank</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Change</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">30 Day Trend</th>
-                <th scope="col" class="relative px-6 py-3"><span class="sr-only">Actions</span></th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('keywords.word') %></th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('keywords.current_rank') %></th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('keywords.rank_change') %></th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('keywords.trend') %></th>
+                <th scope="col" class="relative px-6 py-3"><span class="sr-only"><%= t('common.actions') %></span></th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -175,7 +175,7 @@
                         <svg class="mr-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
                           <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
                         </svg>
-                        Error
+                        <%= t('flash.error') %>
                       </span>
                     <% else %>
                       <% rank = keyword.respond_to?(:current_rank) ? keyword.current_rank : nil %>
@@ -216,7 +216,7 @@
                     </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <%= link_to "Edit", edit_site_keyword_path(@current_site, keyword), class: "text-teal-600 hover:text-teal-900" %>
+                    <%= link_to t('common.edit'), edit_site_keyword_path(@current_site, keyword), class: "text-teal-600 hover:text-teal-900" %>
                   </td>
                 </tr>
               <% end %>
@@ -225,10 +225,10 @@
         </div>
       <% else %>
         <div class="p-8 text-center">
-          <p class="text-sm text-gray-500">No keywords yet. Add your first keyword to start tracking.</p>
+          <p class="text-sm text-gray-500"><%= t('keywords.no_keywords') %></p>
           <% if @current_site && current_user.can_add_keyword?(@current_site) %>
             <div class="mt-4">
-              <%= link_to "Add Keyword", new_site_keyword_path(@current_site), class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700" %>
+              <%= link_to t('keywords.add_keyword'), new_site_keyword_path(@current_site), class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700" %>
             </div>
           <% end %>
         </div>

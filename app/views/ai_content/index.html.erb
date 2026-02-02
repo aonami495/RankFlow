@@ -1,7 +1,7 @@
 <div class="space-y-6">
   <div>
-    <h1 class="text-2xl font-bold text-gray-900">AI Content Assistant</h1>
-    <p class="mt-1 text-sm text-gray-500">Generate SEO-optimized content with AI</p>
+    <h1 class="text-2xl font-bold text-gray-900">AIコンテンツアシスタント</h1>
+    <p class="mt-1 text-sm text-gray-500">AIでSEO最適化されたコンテンツを生成</p>
   </div>
 
   <% unless ENV["OPENAI_API_KEY"].present? %>
@@ -13,117 +13,117 @@
           </svg>
         </div>
         <div class="ml-3">
-          <h3 class="text-sm font-medium text-yellow-800">API Key Not Configured</h3>
+          <h3 class="text-sm font-medium text-yellow-800">APIキーが設定されていません</h3>
           <p class="mt-2 text-sm text-yellow-700">
-            OpenAI API key is not set. Mock responses will be used. To enable AI features, set the OPENAI_API_KEY environment variable.
+            OpenAI APIキーが設定されていません。モックレスポンスが使用されます。AI機能を有効にするには、OPENAI_API_KEY環境変数を設定してください。
           </p>
         </div>
       </div>
     </div>
   <% end %>
 
-  <!-- Title Generator -->
+  <!-- タイトルジェネレーター -->
   <div class="bg-white shadow rounded-lg p-6" data-controller="ai-titles">
-    <h3 class="text-lg font-medium text-gray-900 mb-4">Title Generator</h3>
+    <h3 class="text-lg font-medium text-gray-900 mb-4">タイトルジェネレーター</h3>
     <div class="space-y-4">
       <div>
-        <label for="title-keyword" class="block text-sm font-medium text-gray-700">Target Keyword</label>
+        <label for="title-keyword" class="block text-sm font-medium text-gray-700">ターゲットキーワード</label>
         <input type="text" id="title-keyword" data-ai-titles-target="keyword"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
-          placeholder="Enter your target keyword...">
+          placeholder="ターゲットキーワードを入力...">
       </div>
       <div>
-        <label for="current-title" class="block text-sm font-medium text-gray-700">Current Title (optional)</label>
+        <label for="current-title" class="block text-sm font-medium text-gray-700">現在のタイトル（任意）</label>
         <input type="text" id="current-title" data-ai-titles-target="currentTitle"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
-          placeholder="Your current title for improvement...">
+          placeholder="改善したい現在のタイトル...">
       </div>
       <button type="button" data-action="click->ai-titles#generate"
         class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700">
         <svg class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
-        Generate Titles
+        タイトルを生成
       </button>
       <div id="title-results" data-ai-titles-target="results" class="hidden mt-4">
-        <h4 class="text-sm font-medium text-gray-700 mb-2">Suggested Titles:</h4>
+        <h4 class="text-sm font-medium text-gray-700 mb-2">提案タイトル:</h4>
         <ul class="space-y-2" data-ai-titles-target="list"></ul>
       </div>
     </div>
   </div>
 
-  <!-- Outline Generator -->
+  <!-- アウトラインジェネレーター -->
   <div class="bg-white shadow rounded-lg p-6" data-controller="ai-outline">
-    <h3 class="text-lg font-medium text-gray-900 mb-4">Outline Generator</h3>
+    <h3 class="text-lg font-medium text-gray-900 mb-4">アウトラインジェネレーター</h3>
     <div class="space-y-4">
       <div>
-        <label for="outline-keyword" class="block text-sm font-medium text-gray-700">Target Keyword</label>
+        <label for="outline-keyword" class="block text-sm font-medium text-gray-700">ターゲットキーワード</label>
         <input type="text" id="outline-keyword" data-ai-outline-target="keyword"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
-          placeholder="Enter your target keyword...">
+          placeholder="ターゲットキーワードを入力...">
       </div>
       <div>
-        <label for="outline-title" class="block text-sm font-medium text-gray-700">Article Title</label>
+        <label for="outline-title" class="block text-sm font-medium text-gray-700">記事タイトル</label>
         <input type="text" id="outline-title" data-ai-outline-target="title"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
-          placeholder="Your article title...">
+          placeholder="記事タイトル...">
       </div>
       <button type="button" data-action="click->ai-outline#generate"
         class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700">
         <svg class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
         </svg>
-        Generate Outline
+        アウトラインを生成
       </button>
       <div id="outline-results" data-ai-outline-target="results" class="hidden mt-4">
-        <h4 class="text-sm font-medium text-gray-700 mb-2">Suggested Outline:</h4>
+        <h4 class="text-sm font-medium text-gray-700 mb-2">提案アウトライン:</h4>
         <div data-ai-outline-target="content" class="prose prose-sm max-w-none"></div>
       </div>
     </div>
   </div>
 
-  <!-- Meta Description Generator -->
+  <!-- メタディスクリプションジェネレーター -->
   <div class="bg-white shadow rounded-lg p-6" data-controller="ai-meta">
-    <h3 class="text-lg font-medium text-gray-900 mb-4">Meta Description Generator</h3>
+    <h3 class="text-lg font-medium text-gray-900 mb-4">メタディスクリプションジェネレーター</h3>
     <div class="space-y-4">
       <div>
-        <label for="meta-keyword" class="block text-sm font-medium text-gray-700">Target Keyword</label>
+        <label for="meta-keyword" class="block text-sm font-medium text-gray-700">ターゲットキーワード</label>
         <input type="text" id="meta-keyword" data-ai-meta-target="keyword"
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
-          placeholder="Enter your target keyword...">
+          placeholder="ターゲットキーワードを入力...">
       </div>
       <button type="button" data-action="click->ai-meta#generate"
         class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700">
         <svg class="-ml-1 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
         </svg>
-        Generate Meta Description
+        メタディスクリプションを生成
       </button>
       <div id="meta-results" data-ai-meta-target="results" class="hidden mt-4">
-        <h4 class="text-sm font-medium text-gray-700 mb-2">Suggested Meta Description:</h4>
+        <h4 class="text-sm font-medium text-gray-700 mb-2">提案メタディスクリプション:</h4>
         <div data-ai-meta-target="content" class="p-3 bg-gray-50 rounded-md text-sm text-gray-700"></div>
         <p class="mt-2 text-xs text-gray-500">
-          Characters: <span data-ai-meta-target="charCount">0</span>/155
+          文字数: <span data-ai-meta-target="charCount">0</span>/155
         </p>
       </div>
     </div>
   </div>
 
-  <!-- Article Rewrite Suggestions -->
+  <!-- 記事リライト提案 -->
   <% if @sites.any? %>
     <div class="bg-white shadow rounded-lg p-6">
-      <h3 class="text-lg font-medium text-gray-900 mb-4">Article Rewrite Suggestions</h3>
+      <h3 class="text-lg font-medium text-gray-900 mb-4">記事リライト提案</h3>
       <p class="text-sm text-gray-500 mb-4">
-        Get AI-powered suggestions to improve your existing articles. Go to any article's detail page and click "Get AI Suggestions" to analyze and receive improvement recommendations.
+        AIを活用して既存の記事を改善するための提案を取得できます。記事の詳細ページで「AI提案を取得」をクリックして分析と改善提案を受け取りましょう。
       </p>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <% @sites.each do |site| %>
           <% if site.articles.any? %>
             <div class="border border-gray-200 rounded-lg p-4">
               <h4 class="font-medium text-gray-900"><%= site.name %></h4>
-              <p class="text-sm text-gray-500 mt-1"><%= site.articles.count %> articles</p>
+              <p class="text-sm text-gray-500 mt-1"><%= site.articles.count %>件の記事</p>
               <%= link_to site_articles_path(site), class: "mt-2 inline-flex text-sm text-teal-600 hover:text-teal-500" do %>
-                View Articles &rarr;
+                記事を見る &rarr;
               <% end %>
             </div>
           <% end %>

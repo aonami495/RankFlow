@@ -6,9 +6,9 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
       <% end %>
-      <h1 class="text-2xl font-bold text-gray-900">Add Keyword</h1>
+      <h1 class="text-2xl font-bold text-gray-900"><%= t('keywords.new') %></h1>
     </div>
-    <p class="mt-1 text-sm text-gray-500">Add a keyword to track for <%= @site.name %></p>
+    <p class="mt-1 text-sm text-gray-500"><%= @site.name %>に追跡するキーワードを追加します</p>
   </div>
 
   <div class="bg-white shadow rounded-lg p-6">
@@ -24,7 +24,7 @@
       </div>
       <div class="ml-3">
         <p class="text-sm text-blue-700">
-          Rank will be checked within 24 hours after adding. Daily checks run automatically.
+          キーワードを追加後、24時間以内に順位がチェックされます。その後は毎日自動でチェックされます。
         </p>
       </div>
     </div>

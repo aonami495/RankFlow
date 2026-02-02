@@ -9,25 +9,25 @@ RSpec.describe "Authentication", type: :system do
     it "allows user to log in with valid credentials" do
       visit new_user_session_path
 
-      expect(page).to have_content("Log in to your account")
-      expect(page).to have_content("Welcome back to RankFlow")
+      expect(page).to have_content("アカウントにログイン")
+      expect(page).to have_content("RankFlowへようこそ")
 
-      fill_in "Email", with: "test@example.com"
-      fill_in "Password", with: "password123"
-      click_button "Log in"
+      fill_in "メールアドレス", with: "test@example.com"
+      fill_in "パスワード", with: "password123"
+      click_button "ログイン"
 
       expect(page).to have_current_path(root_path)
-      expect(page).to have_content("Dashboard")
+      expect(page).to have_content("ダッシュボード")
     end
 
     it "shows error message with invalid credentials" do
       visit new_user_session_path
 
-      fill_in "Email", with: "test@example.com"
-      fill_in "Password", with: "wrongpassword"
-      click_button "Log in"
+      fill_in "メールアドレス", with: "test@example.com"
+      fill_in "パスワード", with: "wrongpassword"
+      click_button "ログイン"
 
-      expect(page).to have_content("Invalid Email or password")
+      expect(page).to have_content("メールアドレスまたはパスワードが違います")
     end
 
     it "redirects unauthenticated users to login page" do
@@ -44,11 +44,11 @@ RSpec.describe "Authentication", type: :system do
       sign_in user
       visit root_path
 
-      expect(page).to have_content("Dashboard")
+      expect(page).to have_content("ダッシュボード")
 
       visit sites_path
-      expect(page).to have_content("Sites")
-      expect(page).not_to have_content("Log in")
+      expect(page).to have_content("サイト一覧")
+      expect(page).not_to have_content("ログイン")
     end
   end
 end

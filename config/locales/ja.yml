@@ -1,0 +1,420 @@
+ja:
+  # 日付・時刻フォーマット
+  date:
+    formats:
+      default: "%Y年%m月%d日"
+      short: "%m/%d"
+      long: "%Y年%m月%d日（%A）"
+  time:
+    formats:
+      default: "%Y年%m月%d日 %H:%M"
+      short: "%m/%d %H:%M"
+      long: "%Y年%m月%d日（%A） %H:%M"
+
+  # 通貨フォーマット
+  number:
+    currency:
+      format:
+        unit: "円"
+        format: "%n%u"
+        separator: "."
+        delimiter: ","
+        precision: 0
+    format:
+      separator: "."
+      delimiter: ","
+      precision: 0
+
+  # ActiveRecord モデル名
+  activerecord:
+    models:
+      user: ユーザー
+      site: サイト
+      keyword: キーワード
+      revenue: 収益
+      rank_history: 順位履歴
+      article: 記事
+      article_revenue: 記事収益
+      alert: アラート
+      asp_connection: ASP連携
+      competitor: 競合サイト
+      competitor_rank_history: 競合順位履歴
+      team_membership: チームメンバー
+      comment: コメント
+
+    # 属性名
+    attributes:
+      user:
+        name: 名前
+        email: メールアドレス
+        password: パスワード
+        password_confirmation: パスワード（確認）
+        current_password: 現在のパスワード
+        plan: プラン
+        remember_me: ログイン状態を保持
+      site:
+        name: サイト名
+        url: URL
+        description: 説明
+        user: オーナー
+      keyword:
+        word: キーワード
+        target_url: ターゲットURL
+        site: サイト
+        article: 関連記事
+      revenue:
+        asp_name: ASP名
+        amount: 金額
+        month: 月
+        site: サイト
+      rank_history:
+        rank: 順位
+        checked_at: チェック日
+        status: ステータス
+        error_message: エラーメッセージ
+        keyword: キーワード
+      article:
+        title: タイトル
+        url: URL
+        status: ステータス
+        published_at: 公開日
+        site: サイト
+      article_revenue:
+        asp_name: ASP名
+        amount: 金額
+        month: 月
+        article: 記事
+      alert:
+        alert_type: アラート種別
+        message: メッセージ
+        read: 既読
+        triggered_at: 発生日時
+        user: ユーザー
+      asp_connection:
+        asp_name: ASP名
+        api_key_encrypted: APIキー
+        api_secret_encrypted: APIシークレット
+        status: ステータス
+        last_synced_at: 最終同期日時
+        sync_error: 同期エラー
+        site: サイト
+      competitor:
+        name: 競合サイト名
+        url: URL
+        notes: メモ
+        site: サイト
+      competitor_rank_history:
+        rank: 順位
+        checked_at: チェック日
+        competitor: 競合サイト
+        keyword: キーワード
+      team_membership:
+        role: 役割
+        invited_by_id: 招待者
+        site: サイト
+        user: ユーザー
+      comment:
+        content: コメント内容
+        user: ユーザー
+
+    # バリデーションエラーメッセージ
+    errors:
+      messages:
+        record_invalid: "バリデーションに失敗しました: %{errors}"
+        restrict_dependent_destroy:
+          has_one: "%{record}が存在しているので削除できません"
+          has_many: "%{record}が存在しているので削除できません"
+
+  # 共通メッセージ
+  common:
+    actions: 操作
+    edit: 編集
+    delete: 削除
+    save: 保存
+    cancel: キャンセル
+    back: 戻る
+    create: 作成
+    update: 更新
+    search: 検索
+    show: 詳細
+    confirm_delete: 本当に削除しますか？
+    created_at: 作成日時
+    updated_at: 更新日時
+    yes: はい
+    no: いいえ
+    loading: 読み込み中...
+    no_data: データがありません
+    required: 必須
+    optional: 任意
+
+  # フラッシュメッセージ
+  flash:
+    created: "%{model}を作成しました"
+    updated: "%{model}を更新しました"
+    deleted: "%{model}を削除しました"
+    error: "エラーが発生しました"
+
+  # ナビゲーション
+  navigation:
+    dashboard: ダッシュボード
+    sites: サイト管理
+    keywords: キーワード
+    revenue: 収益管理
+    reports: レポート
+    research: キーワード調査
+    ai_content: AIコンテンツ
+    rewrite: リライト提案
+    alerts: アラート
+    settings: 設定
+    logout: ログアウト
+    login: ログイン
+    signup: 新規登録
+    profile: プロフィール
+    competitors: 競合分析
+    asp_connections: ASP連携
+    team: チーム管理
+
+  # ダッシュボード
+  dashboard:
+    title: ダッシュボード
+    welcome: "%{name}さん、こんにちは"
+    total_sites: 登録サイト数
+    total_keywords: キーワード数
+    monthly_revenue: 今月の収益
+    average_rank: 平均順位
+    recent_alerts: 最近のアラート
+    rank_distribution: 順位分布
+    top_3: TOP3
+    top_10: TOP10
+    top_30: TOP30
+    top_100: TOP100
+    out_of_range: 圏外
+    rank_trend: 順位推移
+    revenue_trend: 収益推移
+    no_sites: サイトがまだ登録されていません
+    add_first_site: 最初のサイトを登録する
+
+  # サイト管理
+  sites:
+    title: サイト一覧
+    new: 新規サイト登録
+    edit: サイト編集
+    show: サイト詳細
+    name: サイト名
+    url: URL
+    description: 説明
+    keywords_count: キーワード数
+    average_rank: 平均順位
+    monthly_revenue: 今月の収益
+    add_site: サイトを追加
+    no_sites: サイトが登録されていません
+    created_success: サイトを作成しました
+    updated_success: サイトを更新しました
+    deleted_success: サイトを削除しました
+    plan_limit_reached: プランの上限に達しています
+    rank_check: 順位チェック
+    last_checked: 最終チェック
+
+  # キーワード管理
+  keywords:
+    title: キーワード一覧
+    new: 新規キーワード登録
+    edit: キーワード編集
+    show: キーワード詳細
+    word: キーワード
+    target_url: ターゲットURL
+    current_rank: 現在の順位
+    rank_change: 順位変動
+    trend: トレンド
+    add_keyword: キーワードを追加
+    no_keywords: キーワードが登録されていません
+    created_success: キーワードを追加しました。順位は24時間以内にチェックされます。
+    updated_success: キーワードを更新しました
+    deleted_success: キーワードを削除しました
+    plan_limit_reached: キーワード数の上限に達しています
+    improving: 上昇中
+    declining: 下降中
+    stable: 安定
+    unknown: 不明
+    rank_history: 順位履歴
+    check_now: 今すぐチェック
+    last_check_failed: 最終チェック失敗
+    not_ranked: 圏外
+
+  # 収益管理
+  revenues:
+    title: 収益管理
+    new: 収益を登録
+    edit: 収益を編集
+    asp_name: ASP名
+    amount: 金額
+    month: 月
+    total: 合計
+    by_asp: ASP別収益
+    by_month: 月別収益
+    add_revenue: 収益を追加
+    no_revenues: 収益データがありません
+    created_success: 収益を登録しました
+    updated_success: 収益を更新しました
+    deleted_success: 収益を削除しました
+    invalid_site: 無効なサイトが選択されました
+    monthly_total: 月間合計
+    yearly_total: 年間合計
+    growth_rate: 成長率
+
+  # レポート
+  reports:
+    title: レポート
+    generate: レポート生成
+    period: 期間
+    site_performance: サイトパフォーマンス
+    keyword_analysis: キーワード分析
+    revenue_analysis: 収益分析
+    export_csv: CSVエクスポート
+    export_pdf: PDFエクスポート
+    weekly: 週次
+    monthly: 月次
+    custom: カスタム
+
+  # キーワード調査
+  keyword_research:
+    title: キーワード調査
+    search: 調査する
+    seed_keyword: シードキーワード
+    results: 調査結果
+    related_keywords: 関連キーワード
+    search_volume: 検索ボリューム
+    difficulty: 難易度
+    add_to_site: サイトに追加
+    no_results: 結果が見つかりませんでした
+
+  # AIコンテンツ
+  ai_content:
+    title: AIコンテンツ生成
+    generate: 生成する
+    keyword: キーワード
+    tone: トーン
+    length: 文字数
+    result: 生成結果
+    copy: コピー
+    regenerate: 再生成
+    professional: プロフェッショナル
+    casual: カジュアル
+    friendly: フレンドリー
+
+  # リライト提案
+  rewrite_suggestions:
+    title: リライト提案
+    analyze: 分析する
+    article_url: 記事URL
+    suggestions: 改善提案
+    priority: 優先度
+    high: 高
+    medium: 中
+    low: 低
+    apply: 適用
+
+  # 競合分析
+  competitors:
+    title: 競合サイト
+    new: 競合を追加
+    edit: 競合を編集
+    name: サイト名
+    url: URL
+    notes: メモ
+    rank_comparison: 順位比較
+    no_competitors: 競合サイトが登録されていません
+    created_success: 競合サイトを追加しました
+    updated_success: 競合サイトを更新しました
+    deleted_success: 競合サイトを削除しました
+
+  # ASP連携
+  asp_connections:
+    title: ASP連携
+    new: 連携を追加
+    edit: 連携を編集
+    asp_name: ASP名
+    status: ステータス
+    last_synced: 最終同期
+    sync_now: 今すぐ同期
+    connected: 連携済み
+    pending: 保留中
+    error: エラー
+    no_connections: ASP連携がありません
+    created_success: ASP連携を追加しました
+    updated_success: ASP連携を更新しました
+    deleted_success: ASP連携を削除しました
+
+  # チーム管理
+  team_memberships:
+    title: チームメンバー
+    new: メンバーを招待
+    email: メールアドレス
+    role: 役割
+    owner: オーナー
+    editor: 編集者
+    viewer: 閲覧者
+    invited_by: 招待者
+    remove: 削除
+    no_members: チームメンバーがいません
+    invited_success: メンバーを招待しました
+    removed_success: メンバーを削除しました
+
+  # アラート
+  alerts:
+    title: アラート
+    mark_as_read: 既読にする
+    mark_all_as_read: すべて既読
+    no_alerts: アラートはありません
+    rank_drop: 順位下落
+    rank_improvement: 順位上昇
+    new_competitor: 新規競合
+    revenue_change: 収益変動
+    triggered_at: 発生日時
+    unread: 未読
+
+  # コメント
+  comments:
+    title: コメント
+    new: コメントを追加
+    edit: コメントを編集
+    content: 内容
+    no_comments: コメントはありません
+    created_success: コメントを追加しました
+    updated_success: コメントを更新しました
+    deleted_success: コメントを削除しました
+
+  # ユーザー・認証関連
+  users:
+    profile: プロフィール
+    edit_profile: プロフィール編集
+    plan: 現在のプラン
+    free: フリープラン
+    basic: ベーシックプラン
+    pro: プロプラン
+    upgrade: プランをアップグレード
+
+  # エラーページ
+  errors:
+    not_found: ページが見つかりません
+    unauthorized: アクセス権限がありません
+    internal_server_error: サーバーエラーが発生しました
+    back_to_home: ホームに戻る
+
+  # ページネーション（Kaminari用）
+  views:
+    pagination:
+      first: "最初"
+      last: "最後"
+      previous: "前へ"
+      next: "次へ"
+      truncate: "..."
+
+  # Helpers
+  helpers:
+    select:
+      prompt: "選択してください"
+    submit:
+      create: "作成"
+      update: "更新"
+      submit: "送信"
