@@ -30,7 +30,7 @@ gem "devise-i18n", "~> 1.12"
 
 # Background Jobs
 gem "sidekiq", "~> 7.2"
-gem "sidekiq-cron", "~> 1.11"
+gem "sidekiq-cron", "~> 2.3"
 
 # API Integration
 gem "google_search_results"
