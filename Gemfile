@@ -22,7 +22,7 @@ gem "jbuilder"
 gem "redis", ">= 4.0.1"
 
 # Authentication
-gem "devise", "~> 4.9"
+gem "devise", "~> 5.0"
 
 # I18n (日本語化)
 gem "rails-i18n", "~> 7.0"
