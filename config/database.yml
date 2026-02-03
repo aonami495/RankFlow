@@ -57,6 +57,9 @@ development:
 test:
   <<: *default
   database: rankflow_test
+  host: <%= ENV.fetch("PGHOST", "localhost") %>
+  username: <%= ENV.fetch("PGUSER", nil) %>
+  password: <%= ENV.fetch("PGPASSWORD", nil) %>
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is

@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :article_revenue do
-    article { nil }
-    asp_name { "MyString" }
-    amount { "9.99" }
-    month { "2026-02-01" }
+    article
+    asp_name { Revenue::ASP_OPTIONS.sample }
+    amount { rand(100..5000) }
+    month { Date.current.beginning_of_month }
   end
 end

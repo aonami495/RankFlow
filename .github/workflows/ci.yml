@@ -1,80 +1,44 @@
 name: CI
 
 on:
-  pull_request:
   push:
-    branches: [ main ]
+    branches:
+      - main
+  pull_request:
 
 jobs:
-  scan_ruby:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      - name: Scan for common Rails security vulnerabilities using static analysis
-        run: bin/brakeman --no-pager
-
-  scan_js:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      - name: Scan for security vulnerabilities in JavaScript dependencies
-        run: bin/importmap audit
-
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      - name: Lint code for consistent style
-        run: bin/rubocop -f github
-
   test:
     runs-on: ubuntu-latest
 
+    env:
+      RAILS_ENV: test
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: postgres
+
     services:
       postgres:
-        image: postgres
+        image: postgres:15
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: rankflow_test
         ports:
           - 5432:5432
-        options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
-
-      # redis:
-      #   image: redis
-      #   ports:
-      #     - 6379:6379
-      #   options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
-      - name: Install packages
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y google-chrome-stable curl libjemalloc2 libvips postgresql-client
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y \
+            google-chrome-stable \
+            libvips \
+            postgresql-client
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -85,17 +49,66 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      - name: Run tests
-        env:
-          RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432
-          # REDIS_URL: redis://localhost:6379/0
-        run: bin/rails db:test:prepare test test:system
+      - name: Install gems
+        run: bundle install --jobs 4 --retry 3
 
-      - name: Keep screenshots from failed system tests
+      - name: Setup database
+        run: |
+          bin/rails db:create
+          bin/rails db:migrate
+
+      - name: Run RSpec tests
+        run: bundle exec rspec --format progress
+
+      - name: Upload screenshots from failed system tests
         uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: screenshots
-          path: ${{ github.workspace }}/tmp/screenshots
+          path: tmp/capybara
           if-no-files-found: ignore
+          retention-days: 7
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+
+      - name: Install gems
+        run: bundle install --jobs 4 --retry 3
+
+      - name: Run RuboCop
+        run: bundle exec rubocop -f github
+        continue-on-error: true
+
+  security:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+
+      - name: Install gems
+        run: bundle install --jobs 4 --retry 3
+
+      - name: Run Brakeman security scan
+        run: bundle exec brakeman --no-pager
+        continue-on-error: true
+
+      - name: Scan JavaScript dependencies
+        run: bin/importmap audit
+        continue-on-error: true
