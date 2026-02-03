@@ -5,6 +5,7 @@
 ![Ruby](https://img.shields.io/badge/Ruby-3.2-red)
 ![Rails](https://img.shields.io/badge/Rails-7.2-red)
 ![License](https://img.shields.io/badge/License-MIT-blue)
+[![CI](https://github.com/aonami495/RankFlow/actions/workflows/ci.yml/badge.svg)](https://github.com/aonami495/RankFlow/actions/workflows/ci.yml)
 
 ---
 
@@ -92,12 +93,13 @@ SEO順位と収益を同一画面で確認でき、リライト優先度の判�
 
 ### 外部API
 
-- **Google Custom Search API** - 検索順位取得（gl=jp で日本向け）
+- **SerpAPI** - Google検索順位取得（日本向け設定: gl=jp, hl=ja）
 - **OpenAI API** - AIコンテンツ提案（オプション）
 
 ### インフラ
 
 - **Heroku** / **Fly.io** 対応
+- **GitHub Actions** - CI/CD
 - **Action Mailer** - メール通知
 
 ---
@@ -117,19 +119,19 @@ Node.js 18.x 以上
 
 ```bash
 # リポジトリのクローン
-git clone https://github.com/yourusername/rankflow.git
-cd rankflow
+git clone https://github.com/aonami495/RankFlow.git
+cd RankFlow
 
 # 依存関係のインストール
 bundle install
 
 # データベースのセットアップ
-rails db:create
-rails db:migrate
-rails db:seed
+bin/rails db:create
+bin/rails db:migrate
+bin/rails db:seed
 
 # Tailwind CSSのビルド
-rails tailwindcss:build
+bin/rails tailwindcss:build
 ```
 
 ### 環境変数の設定
@@ -137,9 +139,8 @@ rails tailwindcss:build
 `.env` ファイルを作成し、以下の環境変数を設定してください。
 
 ```bash
-# Google Custom Search API
-GOOGLE_API_KEY=your_google_api_key
-GOOGLE_CSE_ID=your_custom_search_engine_id
+# SerpAPI（順位チェック機能を使用する場合）
+SERPAPI_KEY=your_serpapi_key
 
 # OpenAI API（オプション：AIコンテンツ提案機能を使用する場合）
 OPENAI_API_KEY=your_openai_api_key
@@ -164,21 +165,20 @@ bin/rails server
 bundle exec sidekiq
 
 # Tailwind CSS watch（開発時、別ターミナル）
-rails tailwindcss:watch
+bin/rails tailwindcss:watch
 ```
 
 アプリケーションは http://localhost:3000 で起動します。
 
 ---
 
-## Google Custom Search API の設定
+## SerpAPI の設定
 
-1. [Google Cloud Console](https://console.cloud.google.com/) でプロジェクトを作成
-2. Custom Search API を有効化
-3. APIキーを発行
-4. [Programmable Search Engine](https://programmablesearchengine.google.com/) で検索エンジンを作成
-5. 検索エンジンID（cx）を取得
-6. 環境変数に設定
+1. [SerpAPI](https://serpapi.com/) でアカウントを作成
+2. APIキーを取得
+3. 環境変数 `SERPAPI_KEY` に設定
+
+SerpAPIは月100回まで無料で利用可能です。
 
 ---
 
@@ -193,7 +193,21 @@ bundle exec rspec
 # 特定のテスト実行
 bundle exec rspec spec/models/
 bundle exec rspec spec/services/
+bundle exec rspec spec/system/
+
+# カバレッジ付きで実行
+COVERAGE=true bundle exec rspec
 ```
+
+### テストカバレッジ
+
+| カテゴリ | テスト数 |
+| -------- | -------- |
+| モデル   | 70+      |
+| サービス | 60+      |
+| ジョブ   | 11       |
+| E2E      | 11       |
+| **合計** | **230+** |
 
 ### コードスタイル
 
@@ -205,9 +219,30 @@ bundle exec rubocop
 bundle exec rubocop -a
 ```
 
+### セキュリティスキャン
+
+```bash
+# Brakeman による脆弱性スキャン
+bundle exec brakeman --no-pager
+```
+
 ### N+1クエリ検出
 
 開発環境では Bullet gem により N+1 クエリを自動検出します。
+
+---
+
+## CI/CD
+
+GitHub Actions による継続的インテグレーションを設定済みです。
+
+| ジョブ     | 内容                                  |
+| ---------- | ------------------------------------- |
+| `test`     | RSpecテスト（PostgreSQL使用）         |
+| `lint`     | RuboCopによるコードスタイルチェック   |
+| `security` | Brakemanセキュリティスキャン          |
+
+プルリクエスト作成時・mainブランチへのpush時に自動実行されます。
 
 ---
 
@@ -225,8 +260,8 @@ heroku addons:create heroku-redis:mini
 
 # 環境変数設定
 heroku config:set RAILS_MASTER_KEY=$(cat config/master.key)
-heroku config:set GOOGLE_API_KEY=your_api_key
-heroku config:set GOOGLE_CSE_ID=your_cse_id
+heroku config:set SERPAPI_KEY=your_api_key
+heroku config:set OPENAI_API_KEY=your_openai_key
 
 # デプロイ
 git push heroku main
@@ -243,9 +278,9 @@ heroku run rails db:migrate
 rankflow/
 ├── app/
 │   ├── controllers/     # コントローラー
-│   ├── models/          # モデル
+│   ├── models/          # モデル（17モデル）
 │   ├── views/           # ビュー（ERB）
-│   ├── services/        # サービスクラス
+│   ├── services/        # サービスクラス（6サービス）
 │   ├── jobs/            # バックグラウンドジョブ
 │   └── helpers/         # ヘルパー
 ├── config/
@@ -254,7 +289,13 @@ rankflow/
 ├── db/
 │   ├── migrate/         # マイグレーション
 │   └── schema.rb        # スキーマ
-└── spec/                # テスト
+├── spec/                # テスト（230+）
+│   ├── models/          # モデルテスト
+│   ├── services/        # サービステスト
+│   ├── jobs/            # ジョブテスト
+│   └── system/          # E2Eテスト
+└── .github/
+    └── workflows/       # CI設定
 ```
 
 ---
@@ -277,7 +318,7 @@ MIT License
 
 ## お問い合わせ
 
-バグ報告や機能リクエストは [Issues](https://github.com/aonami495/rankflow/issues) にお願いします。
+バグ報告や機能リクエストは [Issues](https://github.com/aonami495/RankFlow/issues) にお願いします。
 
 ---
 
