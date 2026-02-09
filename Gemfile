@@ -34,7 +34,7 @@ gem "sidekiq-cron", "~> 1.11"
 
 # API Integration
 gem "google_search_results"
-gem "faraday", "~> 2.8"
+gem "faraday", "~> 2.14"
 gem "ruby-openai", "~> 6.3"
 
 # Charts & Data
