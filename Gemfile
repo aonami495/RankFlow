@@ -29,7 +29,7 @@ gem "rails-i18n", "~> 7.0"
 gem "devise-i18n", "~> 1.12"
 
 # Background Jobs
-gem "sidekiq", "~> 7.2"
+gem "sidekiq", "~> 8.1"
 gem "sidekiq-cron", "~> 1.11"
 
 # API Integration
