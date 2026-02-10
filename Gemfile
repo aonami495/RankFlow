@@ -80,7 +80,7 @@ group :development do
   gem "annotate", "~> 3.2"
 
   # N+1 query detection
-  gem "bullet", "~> 7.1"
+  gem "bullet", "~> 8.1"
 end
 
 group :test do

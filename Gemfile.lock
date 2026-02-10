@@ -90,7 +90,7 @@ GEM
     brakeman (8.0.1)
       racc
     builder (3.3.0)
-    bullet (7.2.0)
+    bullet (8.1.0)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     capybara (3.40.0)
@@ -452,7 +452,7 @@ DEPENDENCIES
   annotate (~> 3.2)
   bootsnap
   brakeman
-  bullet (~> 7.1)
+  bullet (~> 8.1)
   capybara
   chartkick (~> 5.0)
   database_cleaner-active_record
